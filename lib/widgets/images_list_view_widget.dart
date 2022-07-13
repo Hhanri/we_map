@@ -1,6 +1,6 @@
-import 'package:fire_hydrant_mapper/models/image_model.dart';
-import 'package:fire_hydrant_mapper/widgets/image_widget.dart';
-import 'package:fire_hydrant_mapper/widgets/loading_widget.dart';
+import 'package:we_map/models/image_model.dart';
+import 'package:we_map/widgets/image_widget.dart';
+import 'package:we_map/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class ImagesListViewWidget extends StatelessWidget {

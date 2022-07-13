@@ -1,4 +1,4 @@
-import 'package:fire_hydrant_mapper/dialogs/generic_dialog.dart';
+import 'package:we_map/dialogs/generic_dialog.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showErrorMessage({

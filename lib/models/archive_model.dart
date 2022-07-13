@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fire_hydrant_mapper/constants/firebase_constants.dart';
+import 'package:we_map/constants/firebase_constants.dart';
 import 'package:flutter/foundation.dart';
 
 class ArchiveModel extends Equatable {

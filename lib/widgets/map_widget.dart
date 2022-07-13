@@ -1,6 +1,6 @@
-import 'package:fire_hydrant_mapper/blocs/main_bloc/main_bloc.dart';
-import 'package:fire_hydrant_mapper/models/log_model.dart';
-import 'package:fire_hydrant_mapper/widgets/loading_widget.dart';
+import 'package:we_map/blocs/map_bloc/map_bloc.dart';
+import 'package:we_map/models/log_model.dart';
+import 'package:we_map/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,12 +18,12 @@ class MapWidget extends StatelessWidget {
 
     //local temporary marker stream
     return StreamBuilder<LogModel?>(
-      stream: context.read<MainBloc>().tempLogStream.stream,
+      stream: context.read<MapBloc>().tempLogStream.stream,
       builder: (context, tempLog) {
 
         //server markers stream
         return StreamBuilder<List<LogModel>>(
-          stream: context.read<MainBloc>().logsController.stream,
+          stream: context.read<MapBloc>().logsController.stream,
           builder: (context, serverLogs) {
             if (serverLogs.hasData) {
 
@@ -39,11 +39,11 @@ class MapWidget extends StatelessWidget {
                 myLocationEnabled: true,
                 zoomControlsEnabled: false,
                 onMapCreated: (GoogleMapController controller) {
-                  context.read<MainBloc>().add(LoadMapControllerEvent(controller: controller));
+                  context.read<MapBloc>().add(LoadMapControllerEvent(controller: controller));
                 },
                 initialCameraPosition: initialCamera,
                 onTap: (LatLng point) {
-                  context.read<MainBloc>().add(AddTemporaryMarker(point: point));
+                  context.read<MapBloc>().add(AddTemporaryMarker(point: point));
                 },
               );
             }

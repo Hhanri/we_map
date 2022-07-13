@@ -1,4 +1,4 @@
-import 'package:fire_hydrant_mapper/screens/loading/loading_controller.dart';
+import 'package:we_map/screens/loading/loading_controller.dart';
 import 'package:flutter/material.dart';
 
 class LoadingScreen {

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fire_hydrant_mapper/constants/firebase_constants.dart';
-import 'package:fire_hydrant_mapper/models/archive_model.dart';
-import 'package:fire_hydrant_mapper/models/image_model.dart';
-import 'package:fire_hydrant_mapper/models/log_model.dart';
-import 'package:fire_hydrant_mapper/services/location_service.dart';
+import 'package:we_map/constants/firebase_constants.dart';
+import 'package:we_map/models/archive_model.dart';
+import 'package:we_map/models/image_model.dart';
+import 'package:we_map/models/log_model.dart';
+import 'package:we_map/services/location_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:fire_hydrant_mapper/utils/extensions.dart';
+import 'package:we_map/utils/extensions.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FirebaseService {

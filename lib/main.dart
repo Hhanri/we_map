@@ -1,5 +1,5 @@
-import 'package:fire_hydrant_mapper/router/router.dart';
-import 'package:fire_hydrant_mapper/services/firebase_service.dart';
+import 'package:we_map/router/router.dart';
+import 'package:we_map/services/firebase_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

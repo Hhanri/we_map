@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fire_hydrant_mapper/blocs/archive_form_cubit/archive_form_cubit.dart';
-import 'package:fire_hydrant_mapper/models/image_model.dart';
-import 'package:fire_hydrant_mapper/router/router.dart';
-import 'package:fire_hydrant_mapper/widgets/squared_icon_button_widget.dart';
-import 'package:fire_hydrant_mapper/widgets/loading_widget.dart';
+import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
+import 'package:we_map/models/image_model.dart';
+import 'package:we_map/router/router.dart';
+import 'package:we_map/widgets/squared_icon_button_widget.dart';
+import 'package:we_map/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

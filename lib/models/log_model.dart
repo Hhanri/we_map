@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fire_hydrant_mapper/constants/firebase_constants.dart';
-import 'package:fire_hydrant_mapper/router/router.dart';
-import 'package:fire_hydrant_mapper/utils/extensions.dart';
+import 'package:we_map/constants/firebase_constants.dart';
+import 'package:we_map/router/router.dart';
+import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

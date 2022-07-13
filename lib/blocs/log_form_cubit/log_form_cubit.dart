@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fire_hydrant_mapper/dialogs/validate_dialog.dart';
-import 'package:fire_hydrant_mapper/models/archive_model.dart';
-import 'package:fire_hydrant_mapper/models/log_model.dart';
-import 'package:fire_hydrant_mapper/services/firebase_service.dart';
+import 'package:we_map/dialogs/validate_dialog.dart';
+import 'package:we_map/models/archive_model.dart';
+import 'package:we_map/models/log_model.dart';
+import 'package:we_map/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';

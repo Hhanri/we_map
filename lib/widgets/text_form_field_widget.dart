@@ -1,4 +1,4 @@
-import 'package:fire_hydrant_mapper/utils/extensions.dart';
+import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

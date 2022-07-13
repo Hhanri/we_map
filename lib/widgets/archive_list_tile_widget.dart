@@ -1,7 +1,7 @@
-import 'package:fire_hydrant_mapper/blocs/log_form_cubit/log_form_cubit.dart';
-import 'package:fire_hydrant_mapper/models/archive_model.dart';
-import 'package:fire_hydrant_mapper/router/router.dart';
-import 'package:fire_hydrant_mapper/utils/extensions.dart';
+import 'package:we_map/blocs/log_form_cubit/log_form_cubit.dart';
+import 'package:we_map/models/archive_model.dart';
+import 'package:we_map/router/router.dart';
+import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

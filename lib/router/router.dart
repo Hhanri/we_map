@@ -1,9 +1,9 @@
-import 'package:fire_hydrant_mapper/models/archive_model.dart';
-import 'package:fire_hydrant_mapper/models/log_model.dart';
-import 'package:fire_hydrant_mapper/pages/archive_form_page.dart';
-import 'package:fire_hydrant_mapper/pages/home_page.dart';
-import 'package:fire_hydrant_mapper/pages/image_viewer_page.dart';
-import 'package:fire_hydrant_mapper/pages/log_form_page.dart';
+import 'package:we_map/models/archive_model.dart';
+import 'package:we_map/models/log_model.dart';
+import 'package:we_map/pages/archive_form_page.dart';
+import 'package:we_map/pages/home_page.dart';
+import 'package:we_map/pages/image_viewer_page.dart';
+import 'package:we_map/pages/log_form_page.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {

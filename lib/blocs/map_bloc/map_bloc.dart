@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:fire_hydrant_mapper/models/log_model.dart';
-import 'package:fire_hydrant_mapper/services/firebase_service.dart';
-import 'package:fire_hydrant_mapper/services/location_service.dart';
-import 'package:fire_hydrant_mapper/utils/extensions.dart';
+import 'package:we_map/models/log_model.dart';
+import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/services/location_service.dart';
+import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-part 'main_event.dart';
-part 'main_state.dart';
+part 'map_event.dart';
+part 'map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final FirebaseService firebaseService;

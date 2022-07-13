@@ -1,4 +1,4 @@
-part of 'main_bloc.dart';
+part of 'map_bloc.dart';
 
 @immutable
 abstract class MapEvent {}
