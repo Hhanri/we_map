@@ -1,8 +1,9 @@
 import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
+import 'package:we_map/router/router.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
-import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/form_app_bar.dart';
 import 'package:we_map/widgets/images_list_view_widget.dart';
 import 'package:we_map/widgets/text_form_field_widget.dart';
@@ -23,7 +24,7 @@ class ArchiveFormPage extends StatelessWidget {
       create: (context) => ArchiveFormCubit(
         context: context,
         initialArchive: initialArchive,
-        firebaseService: RepositoryProvider.of<FirebaseService>(context)
+        firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context)
       )..init(),
       child: BlocConsumer<ArchiveFormCubit, ArchiveFormState>(
         listener: (context, state) {
@@ -112,7 +113,7 @@ class AddPhotoButtonWidget extends StatelessWidget {
         Expanded(
           child: TextButton.icon(
             onPressed: () {
-              Navigator.of(context).pop();
+              AppRouter.navigatorKey.currentState!.pop();
               context.read<ArchiveFormCubit>().pickImage(imageSource: imageSource);
             },
             icon: Icon(icon),

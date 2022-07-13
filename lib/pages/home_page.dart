@@ -1,5 +1,5 @@
 import 'package:we_map/blocs/map_bloc/map_bloc.dart';
-import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/add_location_floating_action_button_widget.dart';
 import 'package:we_map/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<MapBloc>(
       create: (context) => MapBloc(
-        firebaseService: RepositoryProvider.of<FirebaseService>(context),
+        firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context),
       )..add(MainInitializeEvent()),
       child: Scaffold(
         appBar: AppBar(),

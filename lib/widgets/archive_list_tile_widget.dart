@@ -48,7 +48,7 @@ class EditArchiveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        Navigator.of(context).pushNamed(AppRouter.archiveFormRoute, arguments: archive);
+        AppRouter.navigatorKey.currentState!.pushNamed(AppRouter.archiveFormRoute, arguments: archive);
       },
       icon: const Icon(Icons.edit),
     );

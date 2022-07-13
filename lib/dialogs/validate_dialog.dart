@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_map/router/router.dart';
 
 Future<T?> showValidateDialog<T>({
   required BuildContext context,
@@ -14,13 +15,13 @@ Future<T?> showValidateDialog<T>({
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              AppRouter.navigatorKey.currentState!.pop();
             },
             child: const Text('Cancel')
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop('continue');
+              AppRouter.navigatorKey.currentState!.pop('continue');
             },
             child: const Text('OK')
           )

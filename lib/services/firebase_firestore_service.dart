@@ -10,9 +10,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:image_picker/image_picker.dart';
 
-class FirebaseService {
-  final FirebaseFirestore firebaseInstance = FirebaseFirestore.instance;
-  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+class FirebaseFirestoreService {
+  final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
+  final FirebaseStorage storageInstance = FirebaseStorage.instance;
   final Geoflutterfire geo = Geoflutterfire();
 
   Future<void> addLocalPoint() async {
@@ -26,7 +26,7 @@ class FirebaseService {
   }
 
   Future<void> setLog({required LogModel logModel}) async {
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.logsCollection)
       .doc(logModel.geoPoint.hash)
       .set(LogModel.toJson(model: logModel));
@@ -34,12 +34,12 @@ class FirebaseService {
 
   Future<void> deleteLog({required String logId}) async {
     //delete log
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.logsCollection)
       .doc(logId)
       .delete();
     //delete archives previously from this log
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.archivesCollection)
       .where(FirebaseConstants.parentLogId, isEqualTo: logId)
       .get()
@@ -52,18 +52,18 @@ class FirebaseService {
   }
 
   Future<void> setArchive(ArchiveModel archive) async {
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.archivesCollection)
       .doc(archive.archiveId)
       .set(ArchiveModel.toJson(archive));
   }
 
   Future<void> deleteArchive({required String archiveId}) async {
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.archivesCollection)
       .doc(archiveId)
       .delete();
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.imagesCollection)
       .where(FirebaseConstants.parentArchiveId, isEqualTo: archiveId)
       .get()
@@ -76,14 +76,14 @@ class FirebaseService {
   }
 
   Future<void> updateArchiveWithoutImages({required ArchiveModel newArchive}) async {
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.archivesCollection)
       .doc(newArchive.archiveId)
       .update(ArchiveModel.toJsonWithoutImages(newArchive));
   }
 
   Future<void> updateArchiveParentLogId({required String parentLogId, required String newParentLogId}) async {
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.archivesCollection)
       .where(FirebaseConstants.parentLogId, isEqualTo: parentLogId)
       .get()
@@ -100,7 +100,7 @@ class FirebaseService {
     if (newLog != oldLog) {
       await setLog(logModel: newLog);
       if (newLog.logId != oldLog.logId) {
-        await firebaseInstance
+        await firestoreInstance
           .collection(FirebaseConstants.logsCollection)
           .doc(oldLog.logId)
           .delete();
@@ -113,23 +113,23 @@ class FirebaseService {
   }
 
   Future<void> setImage({required ImageModel imageModel}) async {
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.imagesCollection)
       .add(ImageModel.toJson(imageModel));
   }
 
   Future<void> uploadImage({required String parentArchiveId, required XFile image}) async {
     final ImageModel imageModel = ImageModel(parentArchiveId: parentArchiveId, path: "images/${image.name}");
-    final Reference ref = firebaseStorage.ref().child(imageModel.path);
+    final Reference ref = storageInstance.ref().child(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
     await setImage(imageModel: imageModel);
   }
 
   Future<void> deleteImage({required ImageModel image}) async {
-    await firebaseStorage
+    await storageInstance
         .ref(image.path)
         .delete();
-    await firebaseInstance
+    await firestoreInstance
       .collection(FirebaseConstants.imagesCollection)
       .where(FirebaseConstants.path, isEqualTo: image.path)
       .where(FirebaseConstants.parentArchiveId, isEqualTo: image.parentArchiveId)
@@ -142,12 +142,12 @@ class FirebaseService {
   }
 
   Future<String> downloadURL(String imagePath) async {
-    String downloadURL = await firebaseStorage.ref(imagePath).getDownloadURL();
+    String downloadURL = await storageInstance.ref(imagePath).getDownloadURL();
     return downloadURL;
   }
 
   Stream<List<LogModel>> getLogsStream() {
-    return firebaseInstance
+    return firestoreInstance
       .collection(FirebaseConstants.logsCollection)
       .snapshots()
       .map((event) {
@@ -158,7 +158,7 @@ class FirebaseService {
   }
 
   Stream<List<ArchiveModel>> getArchivesStream({required String parentLogId}) {
-    return firebaseInstance
+    return firestoreInstance
       .collection(FirebaseConstants.archivesCollection)
       .where(FirebaseConstants.parentLogId, isEqualTo: parentLogId)
       .orderBy(FirebaseConstants.date)
@@ -171,7 +171,7 @@ class FirebaseService {
   }
 
   Stream<List<ImageModel>> getImagesStream({required String parentArchiveId}) {
-    return firebaseInstance
+    return firestoreInstance
       .collection(FirebaseConstants.imagesCollection)
       .where(FirebaseConstants.parentArchiveId, isEqualTo: parentArchiveId)
       .snapshots()

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_map/router/router.dart';
 
 Future<T?> showGenericDialog<T>({
   required BuildContext context,
@@ -14,7 +15,7 @@ Future<T?> showGenericDialog<T>({
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              AppRouter.navigatorKey.currentState!.pop();
             },
             child: const Text('OK')
           )

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:we_map/models/log_model.dart';
-import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/services/location_service.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ part 'map_event.dart';
 part 'map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
-  final FirebaseService firebaseService;
+  final FirebaseFirestoreService firebaseService;
   Completer<GoogleMapController> mapController = Completer();
   final StreamController<LogModel?> tempLogStream = StreamController<LogModel?>.broadcast();
   final StreamController<List<LogModel>> logsController = StreamController<List<LogModel>>();

@@ -5,7 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:we_map/dialogs/validate_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/log_model.dart';
-import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/router/router.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -15,7 +16,7 @@ part 'log_form_state.dart';
 class LogFormCubit extends Cubit<LogFormState> {
   final BuildContext context;
   final LogModel initialLog;
-  final FirebaseService firebaseService;
+  final FirebaseFirestoreService firebaseService;
   final StreamController<List<ArchiveModel>> archivesStreamController = StreamController<List<ArchiveModel>>();
   LogFormCubit({required this.context, required this.initialLog, required this.firebaseService}) : super(const LogFormInitial(isLoading: false));
 
@@ -90,7 +91,7 @@ class LogFormCubit extends Cubit<LogFormState> {
     final shouldContinue = await showValidateDialog(context: context, action: action, elementName: elementName);
     if (shouldContinue == 'continue') {
       await tryCatch(function);
-      shouldPop ? Future.microtask(() => Navigator.of(context).pop()) : null;
+      shouldPop ? Future.microtask(() => AppRouter.navigatorKey.currentState!.pop()) : null;
     }
   }
 

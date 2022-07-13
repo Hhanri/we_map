@@ -1,5 +1,6 @@
 import 'package:we_map/router/router.dart';
-import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/services/firebase_auth_service.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +16,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider<FirebaseService>(
-      create: (context) => FirebaseService(),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<FirebaseFirestoreService>(
+          create: (context) => FirebaseFirestoreService(),
+        ),
+        RepositoryProvider<FirebaseAuthService>(
+          create: (context) => FirebaseAuthService(),
+        ),
+      ],
       child: MaterialApp(
         builder: (context, child) {
           return MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child!);
@@ -25,6 +33,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        navigatorKey: AppRouter.navigatorKey,
         initialRoute: '/',
         onGenerateRoute: AppRouter().onGenerate,
       ),

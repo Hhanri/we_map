@@ -5,7 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:we_map/dialogs/validate_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/image_model.dart';
-import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/router/router.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,7 @@ part 'archive_form_state.dart';
 
 class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   final ArchiveModel initialArchive;
-  final FirebaseService firebaseService;
+  final FirebaseFirestoreService firebaseService;
   final BuildContext context;
   final StreamController<List<ImageModel>> imagesStreamController = StreamController<List<ImageModel>>();
   ArchiveFormCubit({required this.initialArchive, required this.firebaseService, required this.context}) : super(const ArchiveFormInitial(isLoading: false));
@@ -142,7 +143,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
     final shouldContinue = await showValidateDialog(context: context, action: action, elementName: elementName);
     if (shouldContinue == 'continue') {
       await tryCatch(function);
-      shouldPop ? Future.microtask(() => Navigator.of(context).pop()) : null;
+      shouldPop ? Future.microtask(() => AppRouter.navigatorKey.currentState!.pop()) : null;
     }
   }
 

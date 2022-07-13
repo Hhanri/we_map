@@ -2,7 +2,7 @@ import 'package:we_map/blocs/log_form_cubit/log_form_cubit.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/log_model.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
-import 'package:we_map/services/firebase_service.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/archives_list_view_widget.dart';
 import 'package:we_map/widgets/form_app_bar.dart';
 import 'package:we_map/widgets/text_form_field_widget.dart';
@@ -22,7 +22,7 @@ class LogFormPage extends StatelessWidget {
       create: (context) => LogFormCubit(
         context: context,
         initialLog: initialLog,
-        firebaseService: RepositoryProvider.of<FirebaseService>(context)
+        firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context)
       )..init(),
       child: BlocConsumer<LogFormCubit, LogFormState>(
         listener: (context, state) {
