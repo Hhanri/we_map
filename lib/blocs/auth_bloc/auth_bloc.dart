@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 
@@ -9,23 +8,36 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FirebaseAuthService authService;
-  AuthBloc({required this.authService}) : super(const AuthInitial(isLoading: true)) {
+  AuthBloc({required this.authService}) : super(const AuthInitial()) {
 
     on<AuthInitializeEvent>((event, emit) async {
       authService.getUserStateStream().listen((event) {
+        event?.reload();
         if (event != null) {
-          emit(const AuthSignedInState(isLoading: false));
+          add(EmitSignedInEvent());
         } else {
-          emit(const AuthSignedOutState(isLoading: false));
+          add(EmitSignedOutEvent());
         }
       });
       if (authService.isSignedIn) {
         authService.getUserBanStateStream().listen((isBanned) {
           if (isBanned) {
-            emit(const AuthSignedInState(isLoading: false));
+            add(EmitBannedEvent());
           }
         });
       }
+    });
+
+    on<EmitBannedEvent>((event, emit) {
+      emit(const AuthBannedState());
+    });
+
+    on<EmitSignedInEvent>((event, emit) {
+      emit(const AuthSignedInState());
+    });
+
+    on<EmitSignedOutEvent>((event, emit) {
+      emit(const AuthSignedOutState());
     });
   }
 }

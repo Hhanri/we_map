@@ -6,11 +6,7 @@ class FirebaseAuthService {
   final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
 
   Future signIn({required String email, required String password}) async {
-    try {
-      await authInstance.signInWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch(error) {
-      print(error);
-    }
+    await authInstance.signInWithEmailAndPassword(email: email, password: password);
   }
 
   Stream<User?> getUserStateStream() {
@@ -28,25 +24,17 @@ class FirebaseAuthService {
   bool get isSignedIn => authInstance.currentUser != null;
 
   Future<void> signUp({required String email, required String password}) async {
-    try {
-      await authInstance.createUserWithEmailAndPassword(email: email, password: password);
-      await firestoreInstance
-        .collection('users')
-        .doc(authInstance.currentUser!.uid)
-        .set({
+    await authInstance.createUserWithEmailAndPassword(email: email, password: password);
+    await firestoreInstance
+      .collection('users')
+      .doc(authInstance.currentUser!.uid)
+      .set({
         'uid': authInstance.currentUser!.uid,
         'isBanned': false
       });
-    } on FirebaseException catch(error) {
-      print(error.message);
-    }
   }
 
   Future<void> signOut() async {
-    try {
-      await authInstance.signOut();
-    } catch (error) {
-      print(error);
-    }
+    await authInstance.signOut();
   }
 }

@@ -47,7 +47,6 @@ class MapWidget extends StatelessWidget {
                 },
               );
             }
-            print(serverLogs.data );
             return const LoadingWidget();
           }
         );

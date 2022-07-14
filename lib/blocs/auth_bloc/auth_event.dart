@@ -1,13 +1,13 @@
 part of 'auth_bloc.dart';
 
-abstract class AuthEvent extends Equatable {
-
+abstract class AuthEvent {
   const AuthEvent();
 }
 
-class AuthInitializeEvent extends AuthEvent {
-  @override
-  // TODO: implement props
-  List<Object?> get props => [];
-}
+class AuthInitializeEvent extends AuthEvent {}
 
+class EmitSignedInEvent extends AuthEvent {}
+
+class EmitSignedOutEvent extends AuthEvent {}
+
+class EmitBannedEvent extends AuthEvent {}

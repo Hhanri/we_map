@@ -1,3 +1,4 @@
+import 'package:we_map/blocs/auth_bloc/auth_bloc.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
@@ -25,17 +26,21 @@ class MyApp extends StatelessWidget {
           create: (context) => FirebaseAuthService(),
         ),
       ],
-      child: MaterialApp(
-        builder: (context, child) {
-          return MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child!);
-        },
-        title: 'Fire Hydrant Mapper',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      child: BlocProvider(
+        create: (context) => AuthBloc(authService: RepositoryProvider.of<FirebaseAuthService>(context))..add(AuthInitializeEvent()),
+        child: MaterialApp(
+          builder: (context, child) {
+            return MediaQuery(data: MediaQuery.of(context).copyWith(
+                alwaysUse24HourFormat: true), child: child!);
+          },
+          title: 'Fire Hydrant Mapper',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          navigatorKey: AppRouter.navigatorKey,
+          initialRoute: '/',
+          onGenerateRoute: AppRouter().onGenerate,
         ),
-        navigatorKey: AppRouter.navigatorKey,
-        initialRoute: '/',
-        onGenerateRoute: AppRouter().onGenerate,
       ),
     );
   }

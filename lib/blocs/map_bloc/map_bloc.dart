@@ -57,9 +57,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
   @override
   Future<void> close() {
+    print("DISPOSING MAP BLOC");
     logsController.close();
     tempLogStream.close();
-    mapController.future.then((value) => value.dispose());
+    mapController.future.then((controller) async => controller.dispose());
     return super.close();
   }
 }
