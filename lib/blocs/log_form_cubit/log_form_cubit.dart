@@ -19,7 +19,7 @@ class LogFormCubit extends Cubit<LogFormState> {
   final FirebaseFirestoreService firebaseService;
   final StreamController<List<ArchiveModel>> archivesStreamController = StreamController<List<ArchiveModel>>();
   LogFormCubit({required this.context, required this.initialLog, required this.firebaseService}) : super(const LogFormInitial(isLoading: false));
-
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController streetNameController = TextEditingController();
   final TextEditingController latitudeController = TextEditingController();
   final TextEditingController longitudeController = TextEditingController();
@@ -32,6 +32,7 @@ class LogFormCubit extends Cubit<LogFormState> {
   }
 
   void editLog() {
+    if (!formKey.currentState!.validate()) return;
     final newGeoFirePoint = GeoFirePoint(double.parse(latitudeController.text), double.parse(longitudeController.text));
     final newLogId = newGeoFirePoint.hash;
     final String newStreetName = streetNameController.text;

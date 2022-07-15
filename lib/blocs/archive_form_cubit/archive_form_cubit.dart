@@ -21,6 +21,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   ArchiveFormCubit({required this.initialArchive, required this.firebaseService, required this.context}) : super(const ArchiveFormInitial(isLoading: false));
 
   late DateTime date;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController waterLevelController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
@@ -75,6 +76,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   }
 
   void editArchive() {
+    if (!formKey.currentState!.validate()) return;
     final DateTime newDate = date;
     final double newWaterLevel = double.parse(waterLevelController.text);
     final String newNote = noteController.text;

@@ -16,9 +16,6 @@ class LogFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
     return BlocProvider<LogFormCubit>(
       create: (context) => LogFormCubit(
         context: context,
@@ -43,15 +40,13 @@ class LogFormPage extends StatelessWidget {
                 context.read<LogFormCubit>().deleteLog();
               },
               onValidate: () {
-                if (formKey.currentState!.validate()) {
-                  context.read<LogFormCubit>().editLog();
-                }
+                context.read<LogFormCubit>().editLog();
               },
             ),
             body: Padding(
               padding: DisplayConstants.scaffoldPadding,
               child: Form(
-                key: formKey,
+                key: context.read<LogFormCubit>().formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

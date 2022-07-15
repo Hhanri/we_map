@@ -1,4 +1,5 @@
 import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
+import 'package:we_map/blocs/log_form_cubit/log_form_cubit.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
@@ -18,9 +19,6 @@ class ArchiveFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
     return BlocProvider<ArchiveFormCubit>(
       create: (context) => ArchiveFormCubit(
         context: context,
@@ -45,15 +43,13 @@ class ArchiveFormPage extends StatelessWidget {
                 context.read<ArchiveFormCubit>().deleteArchive();
               },
               onValidate: () {
-                if (formKey.currentState!.validate()) {
-                  context.read<ArchiveFormCubit>().editArchive();
-                }
+                context.read<ArchiveFormCubit>().editArchive();
               },
             ),
             body: Padding(
               padding: DisplayConstants.scaffoldPadding,
               child: Form(
-                key: formKey,
+                key: context.read<LogFormCubit>().formKey,
                 child: Column(
                   children: [
                     DatePickerTextFieldWidget(
