@@ -4,6 +4,7 @@ class FirebaseConstants {
   static const String logsCollection = 'logs';
   static const String archivesCollection = 'archives';
   static const String imagesCollection = 'images';
+  static const String usersCollection = 'users';
 
   //parameters
     //logs
@@ -21,4 +22,6 @@ class FirebaseConstants {
   static const String parentArchiveId = 'parentArchiveId';
   static const String path = 'path';
   static const String url = 'url';
+    //users
+  static const String username = 'username';
 }

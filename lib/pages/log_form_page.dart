@@ -1,4 +1,5 @@
 import 'package:we_map/blocs/log_form_cubit/log_form_cubit.dart';
+import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/log_model.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
@@ -48,7 +49,7 @@ class LogFormPage extends StatelessWidget {
               },
             ),
             body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+              padding: DisplayConstants.scaffoldPadding,
               child: Form(
                 key: formKey,
                 child: Column(

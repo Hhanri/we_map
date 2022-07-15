@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:we_map/constants/firebase_constants.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth authInstance = FirebaseAuth.instance;
@@ -21,7 +22,7 @@ class FirebaseAuthService {
 
   Future<bool> get isProfileCreated async {
     final DocumentSnapshot<Map<String, dynamic>> doc = await firestoreInstance
-        .collection('users')
+        .collection(FirebaseConstants.usersCollection)
         .doc(authInstance.currentUser!.uid)
         .get();
     return doc.exists;
@@ -29,9 +30,9 @@ class FirebaseAuthService {
 
   Future<void> createProfile({required String username, required}) async{
    return await firestoreInstance
-    .collection('users')
+    .collection(FirebaseConstants.usersCollection)
     .doc(authInstance.currentUser!.uid)
-    .set({'username': username});
+    .set({FirebaseConstants.username: username});
 }
 
   Future<void> signOut() async {

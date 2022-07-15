@@ -182,8 +182,7 @@ class EmailParameters extends TextFormParameters {
     label: 'Email',
     maxLines: 1,
     validator: (value) {
-      return RegExp(value!).hasMatch("^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*\$")
-        ? null : 'wrong email format';
+      return value.isEmail() ? null : 'wrong email format';
     },
     keyboardType: TextInputType.emailAddress,
     inputFormatters: [

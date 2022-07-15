@@ -1,4 +1,5 @@
 import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
+import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/router/router.dart';
@@ -50,7 +51,7 @@ class ArchiveFormPage extends StatelessWidget {
               },
             ),
             body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+              padding: DisplayConstants.scaffoldPadding,
               child: Form(
                 key: formKey,
                 child: Column(

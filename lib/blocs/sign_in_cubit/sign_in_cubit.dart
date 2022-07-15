@@ -10,20 +10,18 @@ import 'package:we_map/services/firebase_auth_service.dart';
 class SignInCubit extends Cubit<SignInState> {
   final FirebaseAuthService authService;
   final BuildContext context;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   SignInCubit({required this.authService, required this.context}) : super(const SignInInitial(isLoading: false));
 
-  void initTest() {
-    emailController.text = 'test@test.com';
-    passwordController.text = 'testtest';
-  }
-
   void signIn() async {
-    await tryCatch(() async {
-      await authService.signIn(email: emailController.text, password: passwordController.text);
-      AppRouter.pushNamedAndReplaceAll(AppRouter.homeRoute);
-    });
+    if (formKey.currentState!.validate()) {
+      await tryCatch(() async {
+        await authService.signIn(email: emailController.text, password: passwordController.text);
+        AppRouter.pushNamedAndReplaceAll(AppRouter.homeRoute);
+      });
+    }
   }
 
   Future<void> tryCatch(Function function) async {
@@ -37,4 +35,11 @@ class SignInCubit extends Cubit<SignInState> {
   }
   final loadingState = const SignInInitial(isLoading: true);
   final notLoadingState = const SignInInitial(isLoading: false);
+
+  @override
+  Future<void> close() {
+    emailController.dispose();
+    passwordController.dispose();
+    return super.close();
+  }
 }
