@@ -2,12 +2,18 @@ import 'package:equatable/equatable.dart';
 import 'package:we_map/constants/firebase_constants.dart';
 
 class ImageModel extends Equatable {
+  final String uid;
   final String parentArchiveId;
   final String path;
-  const ImageModel({required this.parentArchiveId, required this.path});
+  const ImageModel({
+    required this.uid,
+    required this.parentArchiveId,
+    required this.path
+  });
 
   static Map<String, dynamic> toJson(ImageModel image) {
     return {
+      FirebaseConstants.uid: image.uid,
       FirebaseConstants.parentArchiveId: image.parentArchiveId,
       FirebaseConstants.path: image.path
     };
@@ -15,6 +21,7 @@ class ImageModel extends Equatable {
 
   static ImageModel fromJson(Map<String, dynamic> json) {
     return ImageModel(
+      uid: FirebaseConstants.uid,
       parentArchiveId: json[FirebaseConstants.parentArchiveId],
       path: json[FirebaseConstants.path],
     );

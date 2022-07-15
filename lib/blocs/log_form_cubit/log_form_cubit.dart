@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:we_map/dialogs/validate_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/log_model.dart';
 import 'package:we_map/router/router.dart';
+import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,9 +18,10 @@ part 'log_form_state.dart';
 class LogFormCubit extends Cubit<LogFormState> {
   final BuildContext context;
   final LogModel initialLog;
+  final FirebaseAuthService authService;
   final FirebaseFirestoreService firebaseService;
   final StreamController<List<ArchiveModel>> archivesStreamController = StreamController<List<ArchiveModel>>();
-  LogFormCubit({required this.context, required this.initialLog, required this.firebaseService}) : super(const LogFormInitial(isLoading: false));
+  LogFormCubit({required this.context, required this.initialLog, required this.firebaseService, required this.authService}) : super(const LogFormInitial(isLoading: false));
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController streetNameController = TextEditingController();
   final TextEditingController latitudeController = TextEditingController();
@@ -38,10 +41,12 @@ class LogFormCubit extends Cubit<LogFormState> {
     final String newStreetName = streetNameController.text;
 
     final LogModel newLog = LogModel(
+      uid: initialLog.uid,
       logId: newLogId,
       geoPoint: newGeoFirePoint,
       streetName: newStreetName
     );
+
     continueDialog(
       action: 'edit',
       elementName: 'log',
@@ -60,7 +65,10 @@ class LogFormCubit extends Cubit<LogFormState> {
   }
 
   Future<void> addArchive() async {
-    await tryCatch(() async => await firebaseService.setArchive(ArchiveModel.emptyArchive(initialLog.logId)));
+    await tryCatch(
+      function: () async => await firebaseService.setArchive(ArchiveModel.emptyArchive(parentLogId: initialLog.logId, uid: authService.getUserId)),
+      shouldPop: false
+    );
   }
 
   void deleteArchive(String archiveId) {
@@ -79,20 +87,20 @@ class LogFormCubit extends Cubit<LogFormState> {
     emit(LogFormInitial(isLoading: false, errorMessage: error.message));
   }
 
-  Future<void> tryCatch(Function function) async {
+  Future<void> tryCatch({required Function function, required bool shouldPop}) async {
     emit(loadingState);
     try {
       await function();
       emit(notLoadingState);
+      shouldPop ? Future.microtask(() => AppRouter.pop()) : null;
     } on FirebaseException catch(error) {
-      emit(LogFormInitial(isLoading: false, errorMessage: error.message));
+      emit(LogFormInitial(isLoading: false, errorMessage: error.message ?? error.code));
     }
   }
   Future<void> continueDialog({required String action, required String elementName, required bool shouldPop, required Function function}) async{
     final shouldContinue = await showValidateDialog(context: context, action: action, elementName: elementName);
     if (shouldContinue == 'continue') {
-      await tryCatch(function);
-      shouldPop ? Future.microtask(() => AppRouter.navigatorKey.currentState!.pop()) : null;
+      await tryCatch(function: function, shouldPop: shouldPop);
     }
   }
 

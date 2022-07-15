@@ -1,5 +1,6 @@
 import 'package:we_map/blocs/auth_bloc/auth_bloc.dart';
 import 'package:we_map/blocs/map_bloc/map_bloc.dart';
+import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/add_location_floating_action_button_widget.dart';
 import 'package:we_map/widgets/map_widget.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatelessWidget {
       child: BlocProvider<MapBloc>(
         create: (context) => MapBloc(
           firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context),
+          authService: RepositoryProvider.of<FirebaseAuthService>(context)
         )..add(MainInitializeEvent()),
         child: Scaffold(
           appBar: const HomeAppBar(),

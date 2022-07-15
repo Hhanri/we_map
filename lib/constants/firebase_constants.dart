@@ -23,5 +23,6 @@ class FirebaseConstants {
   static const String path = 'path';
   static const String url = 'url';
     //users
+  static const String uid = 'uid';
   static const String username = 'username';
 }

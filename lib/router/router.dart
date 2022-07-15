@@ -53,6 +53,10 @@ class AppRouter {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       navigatorKey.currentState!.pushNamed(route);
     });
-
+  }
+  static void pop() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      navigatorKey.currentState!.pop();
+    });
   }
 }

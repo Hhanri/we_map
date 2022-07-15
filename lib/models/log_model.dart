@@ -8,11 +8,13 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LogModel extends Equatable {
+  final String uid;
   final String logId;
   final GeoFirePoint geoPoint;
   final String streetName;
 
   const LogModel({
+    required this.uid,
     required this.logId,
     required this.geoPoint,
     required this.streetName,
@@ -20,6 +22,7 @@ class LogModel extends Equatable {
 
   factory LogModel.fromJson(Map<String, dynamic> json) {
     return LogModel(
+      uid: json[FirebaseConstants.uid],
       logId: json[FirebaseConstants.logId],
       geoPoint: (json[FirebaseConstants.position][FirebaseConstants.geopoint] as GeoPoint).geoFireFromGeoPoint(),
       streetName: json[FirebaseConstants.streetName],
@@ -28,14 +31,16 @@ class LogModel extends Equatable {
 
   static Map<String, dynamic> toJson({required LogModel model}) {
     return {
+      FirebaseConstants.uid: model.uid,
       FirebaseConstants.logId: model.geoPoint.hash,
       FirebaseConstants.position: model.geoPoint.data,
       FirebaseConstants.streetName: model.streetName,
     };
   }
 
-  static LogModel emptyLog({required GeoFirePoint geoFirePoint}) {
+  static LogModel emptyLog({required GeoFirePoint geoFirePoint, required String uid}) {
     return LogModel(
+      uid: uid,
       logId: geoFirePoint.hash,
       geoPoint: geoFirePoint,
       streetName: "",
@@ -73,5 +78,5 @@ class LogModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [logId, geoPoint, streetName];
+  List<Object?> get props => [logId, geoPoint, streetName, uid];
 }

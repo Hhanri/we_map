@@ -4,6 +4,7 @@ import 'package:we_map/constants/firebase_constants.dart';
 import 'package:flutter/foundation.dart';
 
 class ArchiveModel extends Equatable {
+  final String uid;
   final String parentLogId;
   final String archiveId;
   final DateTime date;
@@ -11,6 +12,7 @@ class ArchiveModel extends Equatable {
   final String note;
 
   const ArchiveModel({
+    required this.uid,
     required this.parentLogId,
     required this.archiveId,
     required this.date,
@@ -20,6 +22,7 @@ class ArchiveModel extends Equatable {
 
   factory ArchiveModel.fromJson(Map<String, dynamic> json) {
     return ArchiveModel(
+      uid: json[FirebaseConstants.uid],
       archiveId: json[FirebaseConstants.archiveId],
       parentLogId: json[FirebaseConstants.parentLogId],
       date: (json[FirebaseConstants.date] as Timestamp).toDate(),
@@ -30,6 +33,7 @@ class ArchiveModel extends Equatable {
 
   static Map<String, dynamic> toJson(ArchiveModel model) {
     return {
+      FirebaseConstants.uid: model.uid,
       FirebaseConstants.parentLogId: model.parentLogId,
       FirebaseConstants.archiveId: model.archiveId,
       FirebaseConstants.date: model.date,
@@ -40,6 +44,7 @@ class ArchiveModel extends Equatable {
 
   static Map<String, dynamic> toJsonWithoutImages(ArchiveModel model) {
     return {
+      FirebaseConstants.uid: model.uid,
       FirebaseConstants.parentLogId: model.parentLogId,
       FirebaseConstants.archiveId: model.archiveId,
       FirebaseConstants.date: model.date,
@@ -48,8 +53,9 @@ class ArchiveModel extends Equatable {
     };
   }
 
-  static ArchiveModel emptyArchive(String parentLogId) {
+  static ArchiveModel emptyArchive({required String parentLogId, required String uid}) {
     return ArchiveModel(
+      uid: uid,
       archiveId: UniqueKey().toString(),
       parentLogId: parentLogId,
       date: DateTime.now(),

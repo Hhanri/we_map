@@ -6,7 +6,7 @@ class FirebaseAuthService {
   final FirebaseAuth authInstance = FirebaseAuth.instance;
   final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
 
-
+  String get getUserId => authInstance.currentUser!.uid;
 
   Stream<User?> getUserStateStream() {
     return authInstance.userChanges();

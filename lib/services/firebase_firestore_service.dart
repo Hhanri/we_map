@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:we_map/constants/firebase_constants.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/image_model.dart';
@@ -11,6 +12,7 @@ import 'package:we_map/utils/extensions.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FirebaseFirestoreService {
+  final FirebaseAuth authInstance = FirebaseAuth.instance;
   final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
   final FirebaseStorage storageInstance = FirebaseStorage.instance;
   final Geoflutterfire geo = Geoflutterfire();
@@ -19,7 +21,7 @@ class FirebaseFirestoreService {
     if (await LocationService.getLocationPermission()) {
       final Position position = await LocationService.getLocation();
       final GeoFirePoint geoPoint = position.geoFireFromPosition();
-      await setLog(logModel: LogModel.emptyLog(geoFirePoint: geoPoint));
+      await setLog(logModel: LogModel.emptyLog(geoFirePoint: geoPoint, uid: authInstance.currentUser!.uid));
     } else {
       print("NO LOCATION PERMISSION");
     }
@@ -98,6 +100,7 @@ class FirebaseFirestoreService {
 
   Future<void> updateLog({required LogModel oldLog, required LogModel newLog}) async {
     if (newLog != oldLog) {
+      print("LOGS DIFFERENT");
       await setLog(logModel: newLog);
       if (newLog.logId != oldLog.logId) {
         await firestoreInstance
@@ -118,8 +121,8 @@ class FirebaseFirestoreService {
       .add(ImageModel.toJson(imageModel));
   }
 
-  Future<void> uploadImage({required String parentArchiveId, required XFile image}) async {
-    final ImageModel imageModel = ImageModel(parentArchiveId: parentArchiveId, path: "images/${image.name}");
+  Future<void> uploadImage({required String parentArchiveId, required XFile image, required String uid}) async {
+    final ImageModel imageModel = ImageModel(uid: authInstance.currentUser!.uid, parentArchiveId: parentArchiveId, path: "images/$uid/${image.name}");
     final Reference ref = storageInstance.ref().child(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
     await setImage(imageModel: imageModel);

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:we_map/models/log_model.dart';
+import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/services/location_service.dart';
 import 'package:we_map/utils/extensions.dart';
@@ -14,10 +15,11 @@ part 'map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final FirebaseFirestoreService firebaseService;
+  final FirebaseAuthService authService;
   late GoogleMapController mapController;
   final StreamController<LogModel?> tempLogStream = StreamController<LogModel?>.broadcast();
   final StreamController<List<LogModel>> logsController = StreamController<List<LogModel>>();
-  MapBloc({required this.firebaseService}) : super(MainInitial()) {
+  MapBloc({required this.firebaseService, required this.authService}) : super(MainInitial()) {
 
     void listenToLogs() {
       if (!isClosed) {
@@ -40,7 +42,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     });
 
     on<AddTemporaryMarker>((event, emit) async {
-      tempLogStream.add(LogModel.emptyLog(geoFirePoint: event.point.geoFireFromLatLng()));
+      tempLogStream.add(
+        LogModel.emptyLog(
+          geoFirePoint: event.point.geoFireFromLatLng(),
+          uid: authService.getUserId
+        )
+      );
     });
 
     on<CenterCameraEvent>((event, emit) async {

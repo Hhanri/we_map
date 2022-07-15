@@ -1,10 +1,10 @@
 import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
-import 'package:we_map/blocs/log_form_cubit/log_form_cubit.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
+import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/form_app_bar.dart';
 import 'package:we_map/widgets/images_list_view_widget.dart';
@@ -23,7 +23,8 @@ class ArchiveFormPage extends StatelessWidget {
       create: (context) => ArchiveFormCubit(
         context: context,
         initialArchive: initialArchive,
-        firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context)
+        firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context),
+        authService: RepositoryProvider.of<FirebaseAuthService>(context)
       )..init(),
       child: BlocConsumer<ArchiveFormCubit, ArchiveFormState>(
         listener: (context, state) {
@@ -49,7 +50,7 @@ class ArchiveFormPage extends StatelessWidget {
             body: Padding(
               padding: DisplayConstants.scaffoldPadding,
               child: Form(
-                key: context.read<LogFormCubit>().formKey,
+                key: context.read<ArchiveFormCubit>().formKey,
                 child: Column(
                   children: [
                     DatePickerTextFieldWidget(

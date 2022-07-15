@@ -6,6 +6,7 @@ import 'package:we_map/dialogs/validate_dialog.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/image_model.dart';
 import 'package:we_map/router/router.dart';
+import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,11 @@ part 'archive_form_state.dart';
 
 class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   final ArchiveModel initialArchive;
-  final FirebaseFirestoreService firebaseService;
   final BuildContext context;
+  final FirebaseFirestoreService firebaseService;
+  final FirebaseAuthService authService;
   final StreamController<List<ImageModel>> imagesStreamController = StreamController<List<ImageModel>>();
-  ArchiveFormCubit({required this.initialArchive, required this.firebaseService, required this.context}) : super(const ArchiveFormInitial(isLoading: false));
+  ArchiveFormCubit({required this.initialArchive, required this.context, required this.firebaseService, required this.authService}) : super(const ArchiveFormInitial(isLoading: false));
 
   late DateTime date;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -86,6 +88,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       || newNote != initialArchive.note
     ) {
       final ArchiveModel newArchiveModel = ArchiveModel(
+        uid: authService.getUserId,
         parentLogId: initialArchive.parentLogId,
         archiveId: initialArchive.archiveId,
         date: newDate,
@@ -108,7 +111,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       action: 'upload',
       elementName: 'image',
       shouldPop: false,
-      function: () async => await firebaseService.uploadImage(parentArchiveId: initialArchive.archiveId, image: image)
+      function: () async => await firebaseService.uploadImage(parentArchiveId: initialArchive.archiveId, image: image, uid: initialArchive.uid)
     );
   }
 
@@ -121,7 +124,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       action: 'delete',
       elementName: 'image',
       shouldPop: false,
-      function: () async =>await firebaseService.deleteImage(image: image)
+      function: () async => await firebaseService.deleteImage(image: image)
     );
   }
 
@@ -132,11 +135,12 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
     emit(ArchiveFormInitial(isLoading: false, errorMessage: error.message));
   }
 
-  Future<void> tryCatch(Function function) async {
+  Future<void> tryCatch({required Function function, required bool shouldPop}) async {
     emit(loadingState);
     try {
       await function();
       emit(notLoadingState);
+      shouldPop ? Future.microtask(() => AppRouter.pop()) : null;
     } on FirebaseException catch(error) {
       emit(ArchiveFormInitial(isLoading: false, errorMessage: error.message));
     }
@@ -144,8 +148,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   Future<void> continueDialog({required String action, required String elementName, required bool shouldPop, required Function function}) async{
     final shouldContinue = await showValidateDialog(context: context, action: action, elementName: elementName);
     if (shouldContinue == 'continue') {
-      await tryCatch(function);
-      shouldPop ? Future.microtask(() => AppRouter.navigatorKey.currentState!.pop()) : null;
+      await tryCatch(function: function, shouldPop: shouldPop);
     }
   }
 
