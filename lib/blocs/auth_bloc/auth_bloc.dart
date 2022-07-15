@@ -19,13 +19,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           add(EmitSignedOutEvent());
         }
       });
-      if (authService.isSignedIn) {
-        authService.getUserBanStateStream().listen((isBanned) {
-          if (isBanned) {
-            add(EmitBannedEvent());
-          }
-        });
-      }
     });
 
     on<EmitBannedEvent>((event, emit) {

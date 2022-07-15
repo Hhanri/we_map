@@ -13,26 +13,26 @@ class FirebaseAuthService {
     return authInstance.userChanges();
   }
 
-  Stream<bool> getUserBanStateStream() {
-    return firestoreInstance
-      .collection('users')
-      .doc(authInstance.currentUser!.uid)
-      .snapshots()
-      .map((event) => event.data()!['isBanned']);
-  }
-
   bool get isSignedIn => authInstance.currentUser != null;
 
   Future<void> signUp({required String email, required String password}) async {
     await authInstance.createUserWithEmailAndPassword(email: email, password: password);
-    await firestoreInstance
-      .collection('users')
-      .doc(authInstance.currentUser!.uid)
-      .set({
-        'uid': authInstance.currentUser!.uid,
-        'isBanned': false
-      });
   }
+
+  Future<bool> get isProfileCreated async {
+    final DocumentSnapshot<Map<String, dynamic>> doc = await firestoreInstance
+        .collection('users')
+        .doc(authInstance.currentUser!.uid)
+        .get();
+    return doc.exists;
+  }
+
+  Future<void> createProfile({required String username, required}) async{
+   return await firestoreInstance
+    .collection('users')
+    .doc(authInstance.currentUser!.uid)
+    .set({'username': username});
+}
 
   Future<void> signOut() async {
     await authInstance.signOut();

@@ -14,13 +14,15 @@ part 'map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final FirebaseFirestoreService firebaseService;
-  Completer<GoogleMapController> mapController = Completer();
+  late GoogleMapController mapController;
   final StreamController<LogModel?> tempLogStream = StreamController<LogModel?>.broadcast();
   final StreamController<List<LogModel>> logsController = StreamController<List<LogModel>>();
   MapBloc({required this.firebaseService}) : super(MainInitial()) {
 
     void listenToLogs() {
-      logsController.addStream(firebaseService.getLogsStream());
+      if (!isClosed) {
+        logsController.addStream(firebaseService.getLogsStream());
+      }
     }
 
     on<MainInitializeEvent>((event, emit) async {
@@ -29,7 +31,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     });
 
     on<LoadMapControllerEvent>((event, emit) {
-      mapController.complete(event.controller);
+      mapController = event.controller;
     });
 
     on<AddLogEvent>((event, emit) async {
@@ -43,9 +45,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     on<CenterCameraEvent>((event, emit) async {
       if (await LocationService.getLocationPermission()) {
-        final GoogleMapController googleMapController = await mapController.future;
         final Position position = await LocationService.getLocation();
-        googleMapController.animateCamera(
+        mapController.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(target: position.latLngFromPosition(), zoom: 18 )
           )
@@ -60,7 +61,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     print("DISPOSING MAP BLOC");
     logsController.close();
     tempLogStream.close();
-    mapController.future.then((controller) async => controller.dispose());
+    mapController.dispose();
     return super.close();
   }
 }
