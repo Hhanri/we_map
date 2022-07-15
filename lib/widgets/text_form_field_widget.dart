@@ -14,6 +14,7 @@ class TextFormFieldWidget extends StatelessWidget {
         label: Text(parameters.label),
         //hintText: parameters.hint,
       ),
+      obscureText: (parameters is PasswordParameters) ? true : false,
       keyboardType: parameters.keyboardType,
       inputFormatters: parameters.inputFormatters,
       validator: parameters.validator,
@@ -168,6 +169,44 @@ class NoteParameters extends TextFormParameters {
     keyboardType: TextInputType.multiline,
     inputFormatters: [
       FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+    ]
+  );
+}
+
+class EmailParameters extends TextFormParameters {
+  EmailParameters({
+    required TextEditingController controller
+  }) : super(
+    controller: controller,
+    hint: 'example@gmail.com',
+    label: 'Email',
+    maxLines: 1,
+    validator: (value) {
+      return RegExp(value!).hasMatch("^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*\$")
+        ? null : 'wrong email format';
+    },
+    keyboardType: TextInputType.emailAddress,
+    inputFormatters: [
+      FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+      FilteringTextInputFormatter.singleLineFormatter,
+    ]
+  );
+}
+
+class PasswordParameters extends TextFormParameters {
+  PasswordParameters({
+    required TextEditingController controller
+  }) : super(
+    controller: controller,
+    hint: '123456',
+    label: 'Password',
+    maxLines: 1,
+    validator: (value) {
+      return value!.length >= 6 ? null : 'Password too short, needs at least 6 characters';
+    },
+    keyboardType: TextInputType.visiblePassword,
+    inputFormatters: [
+      FilteringTextInputFormatter.singleLineFormatter,
     ]
   );
 }

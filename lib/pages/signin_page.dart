@@ -32,7 +32,9 @@ class SignInPage extends StatelessWidget {
             },
             builder: (context, state) {
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+
                   TextButton(
                     onPressed: () {
                       context.read<SignInCubit>().signIn();
