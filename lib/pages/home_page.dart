@@ -5,16 +5,14 @@ import 'package:we_map/widgets/add_location_floating_action_button_widget.dart';
 import 'package:we_map/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:we_map/widgets/root_page_widget.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+    return RootPageWidget(
       child: BlocProvider<MapBloc>(
         create: (context) => MapBloc(
           firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context),

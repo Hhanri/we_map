@@ -14,7 +14,7 @@ class TextFormFieldWidget extends StatelessWidget {
         label: Text(parameters.label),
         //hintText: parameters.hint,
       ),
-      obscureText: (parameters is PasswordParameters) ? true : false,
+      obscureText: (parameters is PasswordParameters || parameters is PasswordConfirmationParameters) ? true : false,
       keyboardType: parameters.keyboardType,
       inputFormatters: parameters.inputFormatters,
       validator: parameters.validator,
@@ -182,7 +182,8 @@ class EmailParameters extends TextFormParameters {
     label: 'Email',
     maxLines: 1,
     validator: (value) {
-      return value.isEmail() ? null : 'wrong email format';
+      if (value.isEmail()) return null;
+      return 'Not valid email';
     },
     keyboardType: TextInputType.emailAddress,
     inputFormatters: [
@@ -202,6 +203,27 @@ class PasswordParameters extends TextFormParameters {
     maxLines: 1,
     validator: (value) {
       return value!.length >= 6 ? null : 'Password too short, needs at least 6 characters';
+    },
+    keyboardType: TextInputType.visiblePassword,
+    inputFormatters: [
+      FilteringTextInputFormatter.singleLineFormatter,
+    ]
+  );
+}
+
+class PasswordConfirmationParameters extends TextFormParameters {
+  PasswordConfirmationParameters({
+    required TextEditingController mainController,
+    required TextEditingController confirmationController
+  }) : super(
+    controller: confirmationController,
+    hint: '123456',
+    label: 'Password',
+    maxLines: 1,
+    validator: (value) {
+      if (value!.length < 6) return 'Password too short, needs at least 6 characters';
+      if (value != mainController.text) return 'Password not matching';
+      return null;
     },
     keyboardType: TextInputType.visiblePassword,
     inputFormatters: [

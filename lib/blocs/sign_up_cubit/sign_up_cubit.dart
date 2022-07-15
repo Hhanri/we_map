@@ -1,26 +1,23 @@
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:we_map/blocs/sign_in_cubit/sign_in_state.dart';
-import 'package:we_map/router/router.dart';
-
 import 'package:we_map/services/firebase_auth_service.dart';
 
+part 'sign_up_state.dart';
 
-class SignInCubit extends Cubit<SignInState> {
+class SignUpCubit extends Cubit<SignUpState> {
   final FirebaseAuthService authService;
   final BuildContext context;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  SignInCubit({required this.authService, required this.context}) : super(const SignInInitial(isLoading: false));
+  final TextEditingController passwordConfirmationController = TextEditingController();
+  SignUpCubit({required this.authService, required this.context}) : super(const SignUpInitial(isLoading: false));
 
-  void signIn() async {
+  void signUp() {
     if (formKey.currentState!.validate()) {
-      await tryCatch(() async {
-        await authService.signIn(email: emailController.text, password: passwordController.text);
-        AppRouter.pushNamedAndReplaceAll(AppRouter.homeRoute);
-      });
+      tryCatch(() async => await authService.signUp(email: emailController.text, password: passwordController.text));
     }
   }
 
@@ -30,17 +27,18 @@ class SignInCubit extends Cubit<SignInState> {
       await function();
       emit(notLoadingState);
     } on FirebaseAuthException catch (error) {
-      emit(SignInInitial(isLoading: false, errorMessage: error.message));
+      emit(SignUpInitial(isLoading: false, errorMessage: error.message));
     }
   }
 
-  final loadingState = const SignInInitial(isLoading: true);
-  final notLoadingState = const SignInInitial(isLoading: false);
+  final loadingState = const SignUpInitial(isLoading: true);
+  final notLoadingState = const SignUpInitial(isLoading: false);
 
   @override
   Future<void> close() {
     emailController.dispose();
     passwordController.dispose();
+    passwordConfirmationController.dispose();
     return super.close();
   }
 }

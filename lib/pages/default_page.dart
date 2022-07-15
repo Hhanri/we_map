@@ -17,6 +17,9 @@ class DefaultPage extends StatelessWidget {
         if (state is AuthSignedInState) {
           AppRouter.pushNamedAndReplaceAll(AppRouter.homeRoute);
         }
+        if (state is EmailNotVerifiedState) {
+          AppRouter.pushNamedAndReplaceAll(AppRouter.emailVerificationRoute);
+        }
         if (state is AuthSignedOutState) {
           AppRouter.pushNamedAndReplaceAll(AppRouter.signInRoute);
         }

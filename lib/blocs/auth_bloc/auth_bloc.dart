@@ -14,7 +14,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       authService.getUserStateStream().listen((event) {
         event?.reload();
         if (event != null) {
-          add(EmitSignedInEvent());
+          if (event.emailVerified) {
+            add(EmitSignedInEvent());
+          } else {
+            add(EmitEmailNotVerifiedEvent());
+          }
         } else {
           add(EmitSignedOutEvent());
         }
@@ -31,6 +35,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<EmitSignedOutEvent>((event, emit) {
       emit(const AuthSignedOutState());
+    });
+
+    on<EmitEmailNotVerifiedEvent>((event, emit) {
+      emit(const EmailNotVerifiedState());
     });
   }
 }

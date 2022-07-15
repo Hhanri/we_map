@@ -6,9 +6,7 @@ class FirebaseAuthService {
   final FirebaseAuth authInstance = FirebaseAuth.instance;
   final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
 
-  Future signIn({required String email, required String password}) async {
-    await authInstance.signInWithEmailAndPassword(email: email, password: password);
-  }
+
 
   Stream<User?> getUserStateStream() {
     return authInstance.userChanges();
@@ -16,8 +14,17 @@ class FirebaseAuthService {
 
   bool get isSignedIn => authInstance.currentUser != null;
 
+  Future signIn({required String email, required String password}) async {
+    await authInstance.signInWithEmailAndPassword(email: email, password: password);
+  }
+
   Future<void> signUp({required String email, required String password}) async {
     await authInstance.createUserWithEmailAndPassword(email: email, password: password);
+    await sendEmailVerification();
+  }
+
+  Future<void> sendEmailVerification() async {
+    await authInstance.currentUser!.sendEmailVerification();
   }
 
   Future<bool> get isProfileCreated async {

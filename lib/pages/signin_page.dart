@@ -4,8 +4,10 @@ import 'package:we_map/blocs/sign_in_cubit/sign_in_cubit.dart';
 import 'package:we_map/blocs/sign_in_cubit/sign_in_state.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
+import 'package:we_map/router/router.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
+import 'package:we_map/widgets/root_page_widget.dart';
 import 'package:we_map/widgets/text_form_field_widget.dart';
 
 class SignInPage extends StatelessWidget {
@@ -13,12 +15,9 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+    return RootPageWidget(
       child: Scaffold(
-        body: BlocProvider(
+        body: BlocProvider<SignInCubit>(
           create: (context) => SignInCubit(authService: context.read<FirebaseAuthService>(), context: context),
           child: BlocConsumer<SignInCubit, SignInState>(
             listener: (context, state) {
@@ -41,6 +40,7 @@ class SignInPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      const Spacer(),
                       TextFormFieldWidget(
                         parameters: EmailParameters(controller: context.read<SignInCubit>().emailController),
                       ),
@@ -52,6 +52,13 @@ class SignInPage extends StatelessWidget {
                           context.read<SignInCubit>().signIn();
                         },
                         child: const Text('SIGN IN'),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          AppRouter.pushNamed(AppRouter.signUpRoute);
+                        },
+                        child: const Text('Create account')
                       )
                     ],
                   ),

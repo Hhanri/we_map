@@ -19,3 +19,7 @@ class AuthSignedOutState extends AuthState {
 class AuthBannedState extends AuthState {
   const AuthBannedState();
 }
+
+class EmailNotVerifiedState extends AuthState {
+  const EmailNotVerifiedState();
+}
