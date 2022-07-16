@@ -111,7 +111,12 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       action: 'upload',
       elementName: 'image',
       shouldPop: false,
-      function: () async => await firebaseService.uploadImage(parentArchiveId: initialArchive.archiveId, image: image, uid: initialArchive.uid)
+      function: () async => await firebaseService.uploadImage(
+        parentLogId: initialArchive.parentLogId,
+        parentArchiveId: initialArchive.archiveId,
+        image: image,
+        uid: initialArchive.uid
+      )
     );
   }
 
@@ -138,6 +143,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   Future<void> tryCatch({required Function function, required bool shouldPop}) async {
     emit(loadingState);
     try {
+      WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       await function();
       emit(notLoadingState);
       shouldPop ? Future.microtask(() => AppRouter.pop()) : null;

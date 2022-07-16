@@ -24,6 +24,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future<void> tryCatch(Function function) async {
     emit(loadingState);
     try {
+      WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       await function();
       emit(notLoadingState);
     } on FirebaseAuthException catch (error) {

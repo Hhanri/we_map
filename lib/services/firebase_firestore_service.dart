@@ -121,8 +121,13 @@ class FirebaseFirestoreService {
       .add(ImageModel.toJson(imageModel));
   }
 
-  Future<void> uploadImage({required String parentArchiveId, required XFile image, required String uid}) async {
-    final ImageModel imageModel = ImageModel(uid: authInstance.currentUser!.uid, parentArchiveId: parentArchiveId, path: "images/$uid/${image.name}");
+  Future<void> uploadImage({required String parentLogId, required String parentArchiveId, required XFile image, required String uid}) async {
+    final ImageModel imageModel = ImageModel(
+        uid: authInstance.currentUser!.uid,
+        parentLogId: parentLogId,
+        parentArchiveId: parentArchiveId,
+        path: "images/$uid/${image.name}"
+    );
     final Reference ref = storageInstance.ref().child(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
     await setImage(imageModel: imageModel);

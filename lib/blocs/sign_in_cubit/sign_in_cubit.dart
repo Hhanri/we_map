@@ -29,6 +29,7 @@ class SignInCubit extends Cubit<SignInState> {
     try {
       await function();
       emit(notLoadingState);
+      WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
     } on FirebaseAuthException catch (error) {
       emit(SignInInitial(isLoading: false, errorMessage: error.message));
     }

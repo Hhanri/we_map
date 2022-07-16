@@ -50,7 +50,7 @@ class LogFormCubit extends Cubit<LogFormState> {
     continueDialog(
       action: 'edit',
       elementName: 'log',
-      shouldPop: true,
+      shouldPop: false,
       function: () async => await firebaseService.updateLog(oldLog: initialLog, newLog: newLog)
     );
   }
@@ -90,6 +90,7 @@ class LogFormCubit extends Cubit<LogFormState> {
   Future<void> tryCatch({required Function function, required bool shouldPop}) async {
     emit(loadingState);
     try {
+      WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       await function();
       emit(notLoadingState);
       shouldPop ? Future.microtask(() => AppRouter.pop()) : null;

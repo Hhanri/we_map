@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 
@@ -21,6 +21,7 @@ class EmailVerificationCubit extends Cubit<EmailVerificationState> {
   Future<void> tryCatch(Function function) async {
     emit(loadingState);
     try {
+      WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       await function();
       emit(notLoadingState);
     } on FirebaseAuthException catch (error) {
