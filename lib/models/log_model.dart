@@ -47,20 +47,21 @@ class LogModel extends Equatable {
     );
   }
 
-  static Marker getMarker({required BuildContext context, required LogModel log}) {
+  static Marker getMarker({required BuildContext context, required LogModel log, required String uid}) {
     return Marker(
+      icon: log.uid == uid ? BitmapDescriptor.defaultMarker : BitmapDescriptor.defaultMarkerWithHue(200),
       markerId: MarkerId(log.geoPoint.hash),
       position: log.geoPoint.latLngFromGeoFire(),
       infoWindow: InfoWindow(title: log.streetName),
       onTap: () {
-        AppRouter.navigatorKey.currentState!.pushNamed(AppRouter.logFormRoute, arguments: log);
+        AppRouter.pushNamed(AppRouter.logFormRoute, arguments: log);
       }
     );
   }
   
   static Marker getTempMarker({required BuildContext context, required LogModel log}) {
     return Marker(
-      icon: BitmapDescriptor.defaultMarkerWithHue(100),
+      icon: BitmapDescriptor.defaultMarkerWithHue(90),
       markerId: MarkerId(log.geoPoint.hash),
       position: log.geoPoint.latLngFromGeoFire(),
       infoWindow: InfoWindow(title: log.streetName),
@@ -70,9 +71,9 @@ class LogModel extends Equatable {
     );
   }
 
-  static Set<Marker> getMarkers({required BuildContext context, required List<LogModel> logs}) {
+  static Set<Marker> getMarkers({required BuildContext context, required List<LogModel> logs, required String uid}) {
     final Set<Marker> markers = logs.map((log) {
-      return getMarker(context: context, log: log);
+      return getMarker(context: context, log: log, uid: uid);
     }).toSet();
     return markers;
   }

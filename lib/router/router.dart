@@ -49,9 +49,9 @@ class AppRouter {
       navigatorKey.currentState!.pushNamedAndRemoveUntil(route, (route) => route.isFirst);
     });
   }
-  static void pushNamed(String route) {
+  static void pushNamed(String route, {dynamic arguments}) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      navigatorKey.currentState!.pushNamed(route);
+      navigatorKey.currentState!.pushNamed(route, arguments: arguments);
     });
   }
   static void pop() {
