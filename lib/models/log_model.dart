@@ -54,7 +54,11 @@ class LogModel extends Equatable {
       position: log.geoPoint.latLngFromGeoFire(),
       infoWindow: InfoWindow(title: log.streetName),
       onTap: () {
-        AppRouter.pushNamed(AppRouter.logFormRoute, arguments: log);
+        if (uid !=  log.uid) {
+          AppRouter.pushNamed(AppRouter.logViewRoute, arguments: log);
+        } else {
+          AppRouter.pushNamed(AppRouter.logFormRoute, arguments: log);
+        }
       }
     );
   }

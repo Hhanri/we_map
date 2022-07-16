@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ArchivesListViewWidget extends StatelessWidget {
-  const ArchivesListViewWidget({Key? key}) : super(key: key);
+  final bool isEditing;
+  final Stream<List<ArchiveModel>> stream;
+  const ArchivesListViewWidget({Key? key, required this.isEditing, required this.stream}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ArchiveModel>>(
-      stream: context.read<LogFormCubit>().archivesStreamController.stream,
+      stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
@@ -19,7 +21,7 @@ class ArchivesListViewWidget extends StatelessWidget {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final ArchiveModel archive = snapshot.data![index];
-              return ArchiveListTileWidget(archive: archive);
+              return ArchiveListTileWidget(archive: archive, isEditing: isEditing);
             }
           );
         }

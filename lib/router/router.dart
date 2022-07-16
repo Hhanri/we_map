@@ -8,6 +8,7 @@ import 'package:we_map/pages/home_page.dart';
 import 'package:we_map/pages/image_viewer_page.dart';
 import 'package:we_map/pages/log_form_page.dart';
 import 'package:flutter/material.dart';
+import 'package:we_map/pages/log_view_page.dart';
 import 'package:we_map/pages/signin_page.dart';
 import 'package:we_map/pages/signup_page.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
@@ -20,6 +21,7 @@ class AppRouter {
       case signUpRoute: return returnPage(const SignUpPage());
       case emailVerificationRoute: return returnPage(const EmailVerificationPage());
       case homeRoute: return returnPage(const HomePage());
+      case logViewRoute: return returnPage(LogViewPage(log: settings.arguments as LogModel));
       case logFormRoute: return returnPage(LogFormPage(initialLog: settings.arguments as LogModel));
       case archiveFormRoute: return returnPage(ArchiveFormPage(initialArchive: settings.arguments as ArchiveModel));
       case imageViewerRoute: return returnPage(ImageViewerPage(url: settings.arguments as String));
@@ -33,6 +35,7 @@ class AppRouter {
   static const String isBannedRoute = '/isBanned';
   static const String emailVerificationRoute = '/emailVerification';
   static const String homeRoute = '/home';
+  static const String logViewRoute = '/logView';
   static const String logFormRoute = '/logForm';
   static const String archiveFormRoute = '/archiveForm';
   static const String imageViewerRoute = '/imageViewer';

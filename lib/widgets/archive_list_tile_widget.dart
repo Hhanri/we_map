@@ -7,7 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ArchiveListTileWidget extends StatelessWidget {
   final ArchiveModel archive;
-  const ArchiveListTileWidget({Key? key, required this.archive}) : super(key: key);
+  final bool isEditing;
+  const ArchiveListTileWidget({Key? key, required this.archive, required this.isEditing}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +19,8 @@ class ArchiveListTileWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const ViewArchiveButton(),
-          EditArchiveButton(archive: archive,),
-          DeleteArchiveButton(archiveId: archive.archiveId)
+          if (isEditing) EditArchiveButton(archive: archive,),
+          if (isEditing) DeleteArchiveButton(archiveId: archive.archiveId)
         ],
       )
     );

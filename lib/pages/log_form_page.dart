@@ -61,7 +61,12 @@ class LogFormPage extends StatelessWidget {
                     TextFormFieldWidget(
                       parameters: LongitudeParameters(controller: context.read<LogFormCubit>().longitudeController),
                     ),
-                    const Expanded(child: ArchivesListViewWidget()),
+                    Expanded(
+                      child: ArchivesListViewWidget(
+                        isEditing: true,
+                        stream: context.read<LogFormCubit>().archivesStreamController.stream,
+                      )
+                    ),
                     TextButton(
                       onPressed: () async {
                         await context.read<LogFormCubit>().addArchive();
