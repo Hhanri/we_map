@@ -164,7 +164,7 @@ class NoteParameters extends TextFormParameters {
     controller: controller,
     hint: "something to jot down",
     label: "Note",
-    maxLines: 4,
+    maxLines: 13,
     validator: (value) => null,
     keyboardType: TextInputType.multiline,
     inputFormatters: [

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
 import 'package:we_map/models/image_model.dart';
 import 'package:we_map/router/router.dart';
+import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/squared_icon_button_widget.dart';
 import 'package:we_map/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ImageWidget extends StatelessWidget {
   final ImageModel image;
-  const ImageWidget({Key? key, required this.image}) : super(key: key);
+  final bool isEditing;
+  const ImageWidget({Key? key, required this.image, required this.isEditing}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +20,9 @@ class ImageWidget extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          height: 150,
-          width: 100,
+          width: MediaQuery.of(context).size.width*0.5,
           child: FutureBuilder<String>(
-            future: context.read<ArchiveFormCubit>().getImageUrl(image),
+            future: RepositoryProvider.of<FirebaseFirestoreService>(context).downloadURL(image.path),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final String url = snapshot.data!;
@@ -43,7 +44,7 @@ class ImageWidget extends StatelessWidget {
             }
           ),
         ),
-        Positioned(
+        if (isEditing) Positioned(
           top: 0,
           right: 0,
           child: SquaredIconButtonWidget(

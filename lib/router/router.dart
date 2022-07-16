@@ -2,6 +2,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/log_model.dart';
 import 'package:we_map/pages/archive_form_page.dart';
+import 'package:we_map/pages/archive_view_page.dart';
 import 'package:we_map/pages/default_page.dart';
 import 'package:we_map/pages/email_verification_page.dart';
 import 'package:we_map/pages/home_page.dart';
@@ -23,6 +24,7 @@ class AppRouter {
       case homeRoute: return returnPage(const HomePage());
       case logViewRoute: return returnPage(LogViewPage(log: settings.arguments as LogModel));
       case logFormRoute: return returnPage(LogFormPage(initialLog: settings.arguments as LogModel));
+      case archiveViewRoute: return returnPage(ArchiveViewPage(archive: settings.arguments as ArchiveModel,));
       case archiveFormRoute: return returnPage(ArchiveFormPage(initialArchive: settings.arguments as ArchiveModel));
       case imageViewerRoute: return returnPage(ImageViewerPage(url: settings.arguments as String));
       default: return returnPage(const DefaultPage());
@@ -37,6 +39,7 @@ class AppRouter {
   static const String homeRoute = '/home';
   static const String logViewRoute = '/logView';
   static const String logFormRoute = '/logForm';
+  static const String archiveViewRoute = '/archiveViewRoute';
   static const String archiveFormRoute = '/archiveForm';
   static const String imageViewerRoute = '/imageViewer';
 

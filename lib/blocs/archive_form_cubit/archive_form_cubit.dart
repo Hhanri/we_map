@@ -120,10 +120,6 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
     );
   }
 
-  Future<String> getImageUrl(ImageModel image) async {
-    return firebaseService.downloadURL(image.path);
-  }
-
   void deleteImage(ImageModel image) {
     continueDialog(
       action: 'delete',

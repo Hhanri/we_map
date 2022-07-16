@@ -18,7 +18,7 @@ class ArchiveListTileWidget extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const ViewArchiveButton(),
+          ViewArchiveButton(archive: archive,),
           if (isEditing) EditArchiveButton(archive: archive,),
           if (isEditing) DeleteArchiveButton(archiveId: archive.archiveId)
         ],
@@ -28,13 +28,14 @@ class ArchiveListTileWidget extends StatelessWidget {
 }
 
 class ViewArchiveButton extends StatelessWidget {
-  const ViewArchiveButton({Key? key}) : super(key: key);
+  final ArchiveModel archive;
+  const ViewArchiveButton({Key? key, required this.archive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-
+        AppRouter.pushNamed(AppRouter.archiveViewRoute, arguments: archive);
       },
       icon: const Icon(Icons.remove_red_eye),
     );
