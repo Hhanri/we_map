@@ -15,13 +15,13 @@ Future<T?> showValidateDialog<T>({
         actions: [
           TextButton(
             onPressed: () {
-              AppRouter.navigatorKey.currentState!.pop();
+              AppRouter.pop();
             },
             child: const Text('Cancel')
           ),
           TextButton(
             onPressed: () {
-              AppRouter.navigatorKey.currentState!.pop('continue');
+              AppRouter.pop('continue');
             },
             child: const Text('OK')
           )

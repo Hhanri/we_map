@@ -27,7 +27,7 @@ class ImageWidget extends StatelessWidget {
                 final String url = snapshot.data!;
                 return InkWell(
                   onTap: () {
-                    AppRouter.navigatorKey.currentState!.pushNamed(AppRouter.imageViewerRoute, arguments: url);
+                    AppRouter.pushNamed(AppRouter.imageViewerRoute, arguments: url);
                   },
                   child: Hero(
                     tag: url,

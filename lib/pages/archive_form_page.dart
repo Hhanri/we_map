@@ -111,7 +111,7 @@ class AddPhotoButtonWidget extends StatelessWidget {
         Expanded(
           child: TextButton.icon(
             onPressed: () {
-              AppRouter.navigatorKey.currentState!.pop();
+              AppRouter.pop();
               context.read<ArchiveFormCubit>().pickImage(imageSource: imageSource);
             },
             icon: Icon(icon),

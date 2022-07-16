@@ -50,13 +50,11 @@ class AppRouter {
     });
   }
   static void pushNamed(String route, {dynamic arguments}) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      navigatorKey.currentState!.pushNamed(route, arguments: arguments);
-    });
+    navigatorKey.currentState!.pushNamed(route, arguments: arguments);
   }
-  static void pop() {
+  static void pop([String? argument]) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      navigatorKey.currentState!.pop();
+      navigatorKey.currentState!.pop(argument);
     });
   }
 }

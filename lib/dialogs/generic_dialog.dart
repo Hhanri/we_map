@@ -15,7 +15,7 @@ Future<T?> showGenericDialog<T>({
         actions: [
           TextButton(
             onPressed: () {
-              AppRouter.navigatorKey.currentState!.pop();
+              AppRouter.pop();
             },
             child: const Text('OK')
           )
