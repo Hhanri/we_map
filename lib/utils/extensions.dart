@@ -34,6 +34,12 @@ extension LatlngFromPosition on Position {
   }
 }
 
+extension CoordinatesFromLatLng on LatLng {
+  Coordinates coordinatesFromLatLng() {
+    return Coordinates(latitude, longitude);
+  }
+}
+
 extension FormatDate on DateTime {
   String formatDate() {
     return DateFormat('dd-MM-yyyy').add_Hm().format(this);

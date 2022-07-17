@@ -24,3 +24,9 @@ class AddTemporaryMarker extends MapEvent {
 }
 
 class CenterCameraEvent extends MapEvent {}
+
+class CameraMoveEvent extends MapEvent {
+  final LatLng center;
+
+  CameraMoveEvent({required this.center});
+}

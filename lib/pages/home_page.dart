@@ -3,6 +3,7 @@ import 'package:we_map/blocs/map_bloc/map_bloc.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/add_location_floating_action_button_widget.dart';
+import 'package:we_map/widgets/loading_widget.dart';
 import 'package:we_map/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,9 +28,7 @@ class HomePage extends StatelessWidget {
               if (state is MainInitializedState) {
                 return const MapWidget();
               }
-              return const Center(
-                child: Text("Error"),
-              );
+              return const LoadingWidget();
             }
           ),
         ),

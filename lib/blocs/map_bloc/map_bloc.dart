@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:we_map/models/log_model.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
@@ -19,21 +20,32 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   late GoogleMapController mapController;
   final StreamController<LogModel?> tempLogStream = StreamController<LogModel?>.broadcast();
   final StreamController<List<LogModel>> logsController = StreamController<List<LogModel>>();
+  final BehaviorSubject<double> radiusObs = BehaviorSubject<double>.seeded(0);
+  final BehaviorSubject<LatLng> centerObs = BehaviorSubject<LatLng>();
   MapBloc({required this.firebaseService, required this.authService}) : super(MainInitial()) {
 
-    void listenToLogs() {
+    void listenToLogs() async {
       if (!isClosed) {
-        logsController.addStream(firebaseService.getLogsStream());
+        radiusObs.switchMap((radius) {
+          return centerObs.switchMap((center) {
+            return firebaseService.getLogsStreamRadius(center: center.geoFireFromLatLng(), radius: radius);
+          });
+        }).listen((event) {logsController.add(event);});
       }
     }
 
     on<MainInitializeEvent>((event, emit) async {
-      emit(MainInitializedState());
-      listenToLogs();
+      if (await LocationService.getLocationPermission()) {
+        final target = await LocationService.getLocation();
+        final camera = CameraPosition(target: target.latLngFromPosition(), zoom: 12);
+        centerObs.add(camera.target);
+        emit(MainInitializedState(camera: camera));
+      }
     });
 
     on<LoadMapControllerEvent>((event, emit) {
       mapController = event.controller;
+      listenToLogs();
     });
 
     on<AddLogEvent>((event, emit) async {
@@ -62,10 +74,18 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         print("NO LOCATION PERMISSION");
       }
     });
+
+    on<CameraMoveEvent>((event, emit) async {
+      final LatLngBounds region = await mapController.getVisibleRegion();
+      final double radius = firebaseService.getDistance(northeast: region.northeast, southwest: region.southwest) / 2;
+      radiusObs.add(radius);
+      centerObs.add(event.center);
+    });
   }
   @override
   Future<void> close() {
-    print("DISPOSING MAP BLOC");
+    radiusObs.close();
+    centerObs.close();
     logsController.close();
     tempLogStream.close();
     mapController.dispose();

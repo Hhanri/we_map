@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:we_map/constants/firebase_constants.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/image_model.dart';
@@ -163,6 +164,24 @@ class FirebaseFirestoreService {
           return LogModel.fromJson(doc.data());
         }).toList();
       });
+  }
+
+  //GeoFlutterFire uses radius as Km, Google Maps' radius is in meters
+  Stream<List<LogModel>> getLogsStreamRadius({required GeoFirePoint center, required double radius}) {
+    print('RADIUS = $radius');
+    final ref = firestoreInstance.collection(FirebaseConstants.logsCollection);
+    return geo
+      .collection(collectionRef: ref)
+      .within(center: center, radius: radius / 1000, field: FirebaseConstants.position, strictMode: true)
+      .map((event) {
+        return event.map((doc) {
+          return LogModel.fromJson(doc.data() as Map<String, dynamic>);
+        }).toList();
+    });
+  }
+
+  double getDistance({required LatLng northeast, required LatLng southwest}) {
+    return GeoFirePoint.distanceBetween(to: southwest.coordinatesFromLatLng(), from: northeast.coordinatesFromLatLng())*1000;
   }
 
   Stream<List<ArchiveModel>> getArchivesStream({required String parentLogId}) {
