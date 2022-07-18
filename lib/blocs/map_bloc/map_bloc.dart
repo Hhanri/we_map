@@ -75,11 +75,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       }
     });
 
+    double tempRadius = 0;
+    LatLng tempCenter = const LatLng(0, 0);
+
     on<CameraMoveEvent>((event, emit) async {
       final LatLngBounds region = await mapController.getVisibleRegion();
       final double radius = firebaseService.getDistance(northeast: region.northeast, southwest: region.southwest) / 2;
-      radiusObs.add(radius);
-      centerObs.add(event.center);
+      tempRadius = radius;
+      tempCenter = event.center;
+    });
+
+    on<CameraStopEvent>((event, emit) {
+      radiusObs.add(tempRadius);
+      centerObs.add(tempCenter);
     });
   }
   @override

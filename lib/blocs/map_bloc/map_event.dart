@@ -30,3 +30,5 @@ class CameraMoveEvent extends MapEvent {
 
   CameraMoveEvent({required this.center});
 }
+
+class CameraStopEvent extends MapEvent {}
