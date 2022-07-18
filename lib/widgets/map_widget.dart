@@ -45,7 +45,7 @@ class MapWidget extends StatelessWidget {
                   onTap: (LatLng point) {
                     context.read<MapBloc>().add(AddTemporaryMarker(point: point));
                   },
-                  onCameraMove: (camera) {
+                  onCameraIdle: (camera) {
                     context.read<MapBloc>().add(CameraMoveEvent(center: camera.target));
                   },
                 );
