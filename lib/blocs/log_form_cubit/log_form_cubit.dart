@@ -31,7 +31,7 @@ class LogFormCubit extends Cubit<LogFormState> {
     streetNameController.text = initialLog.streetName;
     latitudeController.text = initialLog.geoPoint.latitude.toString();
     longitudeController.text = initialLog.geoPoint.longitude.toString();
-    archivesStreamController.addStream(firebaseService.getArchivesStream(parentLogId: initialLog.logId));
+    archivesStreamController.addStream(firebaseService.getArchivesStream(log: initialLog));
   }
 
   void editLog() {
@@ -41,7 +41,7 @@ class LogFormCubit extends Cubit<LogFormState> {
     final String newStreetName = streetNameController.text;
 
     final LogModel newLog = LogModel(
-      uid: initialLog.uid,
+      logUid: initialLog.logUid,
       logId: newLogId,
       geoPoint: newGeoFirePoint,
       streetName: newStreetName
@@ -60,23 +60,23 @@ class LogFormCubit extends Cubit<LogFormState> {
       action: 'delete',
       elementName: 'log',
       shouldPop: true,
-      function: () async => await firebaseService.deleteLog(logId: initialLog.logId)
+      function: () async => await firebaseService.deleteLog(log: initialLog)
     );
   }
 
   Future<void> addArchive() async {
     await tryCatch(
-      function: () async => await firebaseService.setArchive(ArchiveModel.emptyArchive(parentLogId: initialLog.logId, uid: authService.getUserId)),
+      function: () async => await firebaseService.setArchive(ArchiveModel.emptyArchive(parentLogUid: initialLog.logUid, parentLogId: initialLog.logId, archiveUid: authService.getUserId)),
       shouldPop: false
     );
   }
 
-  void deleteArchive(String archiveId) {
+  void deleteArchive(ArchiveModel archive) {
     continueDialog(
       action: 'delete',
       elementName: 'archive',
       shouldPop: false,
-      function: () async => await firebaseService.deleteArchive(archiveId: archiveId)
+      function: () async => await firebaseService.deleteArchive(archive: archive)
     );
   }
 

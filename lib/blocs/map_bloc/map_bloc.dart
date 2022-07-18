@@ -57,7 +57,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       tempLogStream.add(
         LogModel.emptyLog(
           geoFirePoint: event.point.geoFireFromLatLng(),
-          uid: authService.getUserId
+          logUid: authService.getUserId
         )
       );
     });

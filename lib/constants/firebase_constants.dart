@@ -8,12 +8,15 @@ class FirebaseConstants {
 
   //parameters
     //logs
+  static const String logUid = 'logUid';
   static const String logId = 'logId';
   static const String position = 'position';
   static const String geopoint = 'geopoint';
   static const String streetName = 'streetName';
     //archives
+  static const String archiveUid = 'archiveUid';
   static const String archiveId = 'archiveId';
+  static const String parentLogUid = 'parentLogUid';
   static const String parentLogId = 'parentLogId';
   static const String date = 'date';
   static const String waterLevel = 'waterLevel';

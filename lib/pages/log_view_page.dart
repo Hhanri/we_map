@@ -28,7 +28,7 @@ class LogViewPage extends StatelessWidget {
             Expanded(
               child: ArchivesListViewWidget(
                 isEditing: false,
-                stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getArchivesStream(parentLogId: log.logId)
+                stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getArchivesStream(log: log)
               ),
             )
           ],

@@ -20,7 +20,7 @@ class ArchiveListTileWidget extends StatelessWidget {
         children: [
           ViewArchiveButton(archive: archive,),
           if (isEditing) EditArchiveButton(archive: archive,),
-          if (isEditing) DeleteArchiveButton(archiveId: archive.archiveId)
+          if (isEditing) DeleteArchiveButton(archive: archive)
         ],
       )
     );
@@ -58,14 +58,14 @@ class EditArchiveButton extends StatelessWidget {
 }
 
 class DeleteArchiveButton extends StatelessWidget {
-  final String archiveId;
-  const DeleteArchiveButton({Key? key, required this.archiveId}) : super(key: key);
+  final ArchiveModel archive;
+  const DeleteArchiveButton({Key? key, required this.archive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        context.read<LogFormCubit>().deleteArchive(archiveId);
+        context.read<LogFormCubit>().deleteArchive(archive);
       },
       icon: const Icon(Icons.delete),
     );

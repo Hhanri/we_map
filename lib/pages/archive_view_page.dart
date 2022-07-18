@@ -34,7 +34,7 @@ class ArchiveViewPage extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.width*0.5,
                 child: ImagesListViewWidget(
-                  stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getImagesStream(parentArchiveId: archive.archiveId),
+                  stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getImagesStream(archive: archive),
                   isEditing: false
                 ),
               )

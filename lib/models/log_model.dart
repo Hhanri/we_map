@@ -8,13 +8,13 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LogModel extends Equatable {
-  final String uid;
+  final String logUid;
   final String logId;
   final GeoFirePoint geoPoint;
   final String streetName;
 
   const LogModel({
-    required this.uid,
+    required this.logUid,
     required this.logId,
     required this.geoPoint,
     required this.streetName,
@@ -22,7 +22,7 @@ class LogModel extends Equatable {
 
   factory LogModel.fromJson(Map<String, dynamic> json) {
     return LogModel(
-      uid: json[FirebaseConstants.uid],
+      logUid: json[FirebaseConstants.logUid],
       logId: json[FirebaseConstants.logId],
       geoPoint: (json[FirebaseConstants.position][FirebaseConstants.geopoint] as GeoPoint).geoFireFromGeoPoint(),
       streetName: json[FirebaseConstants.streetName],
@@ -31,16 +31,16 @@ class LogModel extends Equatable {
 
   static Map<String, dynamic> toJson({required LogModel model}) {
     return {
-      FirebaseConstants.uid: model.uid,
+      FirebaseConstants.logUid: model.logUid,
       FirebaseConstants.logId: model.geoPoint.hash,
       FirebaseConstants.position: model.geoPoint.data,
       FirebaseConstants.streetName: model.streetName,
     };
   }
 
-  static LogModel emptyLog({required GeoFirePoint geoFirePoint, required String uid}) {
+  static LogModel emptyLog({required GeoFirePoint geoFirePoint, required String logUid}) {
     return LogModel(
-      uid: uid,
+      logUid: logUid,
       logId: geoFirePoint.hash,
       geoPoint: geoFirePoint,
       streetName: "",
@@ -49,12 +49,12 @@ class LogModel extends Equatable {
 
   static Marker getMarker({required BuildContext context, required LogModel log, required String uid}) {
     return Marker(
-      icon: log.uid == uid ? BitmapDescriptor.defaultMarker : BitmapDescriptor.defaultMarkerWithHue(200),
+      icon: log.logUid == uid ? BitmapDescriptor.defaultMarker : BitmapDescriptor.defaultMarkerWithHue(200),
       markerId: MarkerId(log.geoPoint.hash),
       position: log.geoPoint.latLngFromGeoFire(),
       infoWindow: InfoWindow(title: log.streetName),
       onTap: () {
-        if (uid !=  log.uid) {
+        if (uid !=  log.logUid) {
           AppRouter.pushNamed(AppRouter.logViewRoute, arguments: log);
         } else {
           AppRouter.pushNamed(AppRouter.logFormRoute, arguments: log);
@@ -83,5 +83,5 @@ class LogModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [logId, geoPoint, streetName, uid];
+  List<Object?> get props => [logId, geoPoint, streetName, logUid];
 }

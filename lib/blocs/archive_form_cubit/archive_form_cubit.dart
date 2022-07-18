@@ -30,7 +30,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   final ImagePicker picker = ImagePicker();
 
   void init() {
-    imagesStreamController.addStream(firebaseService.getImagesStream(parentArchiveId: initialArchive.archiveId));
+    imagesStreamController.addStream(firebaseService.getImagesStream(archive: initialArchive));
     date = initialArchive.date;
     dateController.text = initialArchive.date.formatDate();
     waterLevelController.text = initialArchive.waterLevel.toString();
@@ -73,7 +73,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       action: 'delete',
       elementName: 'archive',
       shouldPop: true,
-      function: () async => await firebaseService.deleteArchive(archiveId: initialArchive.archiveId)
+      function: () async => await firebaseService.deleteArchive(archive: initialArchive)
     );
   }
 
@@ -88,7 +88,8 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       || newNote != initialArchive.note
     ) {
       final ArchiveModel newArchiveModel = ArchiveModel(
-        uid: authService.getUserId,
+        archiveUid: authService.getUserId,
+        parentLogUid: initialArchive.parentLogUid,
         parentLogId: initialArchive.parentLogId,
         archiveId: initialArchive.archiveId,
         date: newDate,
@@ -112,10 +113,8 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       elementName: 'image',
       shouldPop: false,
       function: () async => await firebaseService.uploadImage(
-        parentLogId: initialArchive.parentLogId,
-        parentArchiveId: initialArchive.archiveId,
         image: image,
-        uid: initialArchive.uid
+        parentArchive: initialArchive
       )
     );
   }

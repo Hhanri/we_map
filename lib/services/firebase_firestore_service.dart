@@ -22,7 +22,7 @@ class FirebaseFirestoreService {
     if (await LocationService.getLocationPermission()) {
       final Position position = await LocationService.getLocation();
       final GeoFirePoint geoPoint = position.geoFireFromPosition();
-      await setLog(logModel: LogModel.emptyLog(geoFirePoint: geoPoint, uid: authInstance.currentUser!.uid));
+      await setLog(logModel: LogModel.emptyLog(geoFirePoint: geoPoint, logUid: authInstance.currentUser!.uid));
     } else {
       print("NO LOCATION PERMISSION");
     }
@@ -35,101 +35,88 @@ class FirebaseFirestoreService {
       .set(LogModel.toJson(model: logModel));
   }
 
-  Future<void> deleteLog({required String logId}) async {
+  Future<void> deleteLog({required LogModel log}) async {
     //delete log
     await firestoreInstance
       .collection(FirebaseConstants.logsCollection)
-      .doc(logId)
+      .doc(log.logId)
       .delete();
-    //delete archives previously from this log
-    await firestoreInstance
-      .collection(FirebaseConstants.archivesCollection)
-      .where(FirebaseConstants.parentLogId, isEqualTo: logId)
-      .get()
-      .then((logsDocs) {
-        Future.forEach(logsDocs.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
-          final currentArchive = ArchiveModel.fromJson(doc.data());
-          await deleteArchive(archiveId: currentArchive.archiveId);
-        });
-      });
+    /*await storageInstance
+      .ref("logs/${log.logId}/")
+      .delete();*/
   }
 
   Future<void> setArchive(ArchiveModel archive) async {
     await firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(archive.parentLogId)
       .collection(FirebaseConstants.archivesCollection)
       .doc(archive.archiveId)
       .set(ArchiveModel.toJson(archive));
   }
 
-  Future<void> deleteArchive({required String archiveId}) async {
-    await firestoreInstance
+  Future<void> deleteArchive({required ArchiveModel archive}) async {
+    /*await firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(archive.parentLogId)
       .collection(FirebaseConstants.archivesCollection)
-      .doc(archiveId)
-      .delete();
-    await firestoreInstance
+      .doc(archive.archiveId)
       .collection(FirebaseConstants.imagesCollection)
-      .where(FirebaseConstants.parentArchiveId, isEqualTo: archiveId)
       .get()
       .then((imagesDocs) {
         Future.forEach(imagesDocs.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
-          final ImageModel currentImage = ImageModel.fromJson(doc.data());
-          await deleteImage(image: currentImage);
+          await storageInstance
+            .ref(doc.data()[FirebaseConstants.path])
+            .delete();
         });
-      });
+      });*/
+
+    /*await storageInstance
+      .ref("logs/${archive.parentLogUid}/${archive.parentLogId}/archives/${archive.archiveUid}/${archive.archiveId}/")
+      .delete();*/
+
+    await firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(archive.parentLogId)
+      .collection(FirebaseConstants.archivesCollection)
+      .doc(archive.archiveId)
+      .delete();
   }
 
   Future<void> updateArchiveWithoutImages({required ArchiveModel newArchive}) async {
     await firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(newArchive.parentLogId)
       .collection(FirebaseConstants.archivesCollection)
       .doc(newArchive.archiveId)
       .update(ArchiveModel.toJsonWithoutImages(newArchive));
-  }
-
-  Future<void> updateArchiveParentLogId({required String parentLogId, required String newParentLogId}) async {
-    await firestoreInstance
-      .collection(FirebaseConstants.archivesCollection)
-      .where(FirebaseConstants.parentLogId, isEqualTo: parentLogId)
-      .get()
-      .then((snapshot) {
-        for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
-          doc.reference.update(
-            {FirebaseConstants.parentLogId: newParentLogId}
-          );
-        }
-      });
   }
 
   Future<void> updateLog({required LogModel oldLog, required LogModel newLog}) async {
     if (newLog != oldLog) {
       print("LOGS DIFFERENT");
       await setLog(logModel: newLog);
-      if (newLog.logId != oldLog.logId) {
-        await firestoreInstance
-          .collection(FirebaseConstants.logsCollection)
-          .doc(oldLog.logId)
-          .delete();
-        await updateArchiveParentLogId(
-          parentLogId: oldLog.logId,
-          newParentLogId: newLog.logId
-        );
-      }
     }
   }
 
   Future<void> setImage({required ImageModel imageModel}) async {
     await firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(imageModel.parentLogId)
+      .collection(FirebaseConstants.archivesCollection)
+      .doc(imageModel.parentArchiveId)
       .collection(FirebaseConstants.imagesCollection)
       .add(ImageModel.toJson(imageModel));
   }
 
-  Future<void> uploadImage({required String parentLogId, required String parentArchiveId, required XFile image, required String uid}) async {
+  Future<void> uploadImage({required ArchiveModel parentArchive, required XFile image}) async {
     final ImageModel imageModel = ImageModel(
         uid: authInstance.currentUser!.uid,
-        parentLogId: parentLogId,
-        parentArchiveId: parentArchiveId,
-        path: "images/$uid/${image.name}"
+        parentLogId: parentArchive.parentLogId,
+        parentArchiveId: parentArchive.archiveId,
+        path: "logs/${parentArchive.parentLogUid}/${parentArchive.parentLogId}/archives/${parentArchive.archiveUid}/${parentArchive.archiveId}/images/${image.name}"
     );
-    final Reference ref = storageInstance.ref().child(imageModel.path);
+    final Reference ref = storageInstance.ref(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
     await setImage(imageModel: imageModel);
   }
@@ -138,10 +125,14 @@ class FirebaseFirestoreService {
     await storageInstance
         .ref(image.path)
         .delete();
+
     await firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(image.parentLogId)
+      .collection(FirebaseConstants.archivesCollection)
+      .doc(image.parentArchiveId)
       .collection(FirebaseConstants.imagesCollection)
       .where(FirebaseConstants.path, isEqualTo: image.path)
-      .where(FirebaseConstants.parentArchiveId, isEqualTo: image.parentArchiveId)
       .get()
       .then((imagesDocs) {
         Future.forEach(imagesDocs.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
@@ -184,10 +175,11 @@ class FirebaseFirestoreService {
     return GeoFirePoint.distanceBetween(to: southwest.coordinatesFromLatLng(), from: northeast.coordinatesFromLatLng())*1000;
   }
 
-  Stream<List<ArchiveModel>> getArchivesStream({required String parentLogId}) {
+  Stream<List<ArchiveModel>> getArchivesStream({required LogModel log}) {
     return firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(log.logId)
       .collection(FirebaseConstants.archivesCollection)
-      .where(FirebaseConstants.parentLogId, isEqualTo: parentLogId)
       .orderBy(FirebaseConstants.date)
       .snapshots()
       .map((event) {
@@ -197,10 +189,13 @@ class FirebaseFirestoreService {
       });
   }
 
-  Stream<List<ImageModel>> getImagesStream({required String parentArchiveId}) {
+  Stream<List<ImageModel>> getImagesStream({required ArchiveModel archive}) {
     return firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(archive.parentLogId)
+      .collection(FirebaseConstants.archivesCollection)
+      .doc(archive.archiveId)
       .collection(FirebaseConstants.imagesCollection)
-      .where(FirebaseConstants.parentArchiveId, isEqualTo: parentArchiveId)
       .snapshots()
       .map((event) {
         return event.docs.map((doc) {

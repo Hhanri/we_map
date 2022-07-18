@@ -23,9 +23,9 @@ class MapWidget extends StatelessWidget {
               if (serverLogs.hasData) {
 
                 Set<Marker> markers = LogModel.getMarkers(
-                    context: context,
-                    logs: serverLogs.data!,
-                    uid: context.read<MapBloc>().authService.getUserId
+                  context: context,
+                  logs: serverLogs.data!,
+                  uid: context.read<MapBloc>().authService.getUserId
                 );
                 print("MARKERS = ${markers.length}");
                 if (tempLog.hasData) {
