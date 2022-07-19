@@ -124,7 +124,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
       action: 'delete',
       elementName: 'image',
       shouldPop: false,
-      function: () async => await firebaseService.deleteImage(image: image)
+      function: () async => await firebaseService.deleteImageWithRef(image: image)
     );
   }
 

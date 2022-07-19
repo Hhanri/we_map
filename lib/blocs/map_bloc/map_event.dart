@@ -5,6 +5,8 @@ abstract class MapEvent {}
 
 class MainInitializeEvent extends MapEvent {}
 
+class RequestPermissionEvent extends MapEvent {}
+
 class LoadMapControllerEvent extends MapEvent{
   final GoogleMapController controller;
 

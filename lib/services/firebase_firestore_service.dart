@@ -5,10 +5,8 @@ import 'package:we_map/constants/firebase_constants.dart';
 import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/models/image_model.dart';
 import 'package:we_map/models/log_model.dart';
-import 'package:we_map/services/location_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,16 +15,6 @@ class FirebaseFirestoreService {
   final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
   final FirebaseStorage storageInstance = FirebaseStorage.instance;
   final Geoflutterfire geo = Geoflutterfire();
-
-  Future<void> addLocalPoint() async {
-    if (await LocationService.getLocationPermission()) {
-      final Position position = await LocationService.getLocation();
-      final GeoFirePoint geoPoint = position.geoFireFromPosition();
-      await setLog(logModel: LogModel.emptyLog(geoFirePoint: geoPoint, logUid: authInstance.currentUser!.uid));
-    } else {
-      print("NO LOCATION PERMISSION");
-    }
-  }
 
   Future<void> setLog({required LogModel logModel}) async {
     await firestoreInstance
@@ -40,10 +28,18 @@ class FirebaseFirestoreService {
     await firestoreInstance
       .collection(FirebaseConstants.logsCollection)
       .doc(log.logId)
+      .collection(FirebaseConstants.archivesCollection)
+      .get()
+      .then((archivesDocs) {
+        Future.forEach(archivesDocs.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
+          await deleteArchive(archive: ArchiveModel.fromJson(doc.data()));
+        });
+      });
+
+    await firestoreInstance
+      .collection(FirebaseConstants.logsCollection)
+      .doc(log.logId)
       .delete();
-    /*await storageInstance
-      .ref("logs/${log.logId}/")
-      .delete();*/
   }
 
   Future<void> setArchive(ArchiveModel archive) async {
@@ -56,7 +52,7 @@ class FirebaseFirestoreService {
   }
 
   Future<void> deleteArchive({required ArchiveModel archive}) async {
-    /*await firestoreInstance
+    await firestoreInstance
       .collection(FirebaseConstants.logsCollection)
       .doc(archive.parentLogId)
       .collection(FirebaseConstants.archivesCollection)
@@ -65,15 +61,9 @@ class FirebaseFirestoreService {
       .get()
       .then((imagesDocs) {
         Future.forEach(imagesDocs.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
-          await storageInstance
-            .ref(doc.data()[FirebaseConstants.path])
-            .delete();
+          await deleteImageWithRef(image: ImageModel.fromJson(doc.data()));
         });
-      });*/
-
-    /*await storageInstance
-      .ref("logs/${archive.parentLogUid}/${archive.parentLogId}/archives/${archive.archiveUid}/${archive.archiveId}/")
-      .delete();*/
+      });
 
     await firestoreInstance
       .collection(FirebaseConstants.logsCollection)
@@ -121,7 +111,13 @@ class FirebaseFirestoreService {
     await setImage(imageModel: imageModel);
   }
 
-  Future<void> deleteImage({required ImageModel image}) async {
+  Future<void> deleteImageFromStorage({required String path}) async {
+    await storageInstance
+      .ref(path)
+      .delete();
+  }
+
+  Future<void> deleteImageWithRef({required ImageModel image}) async {
     await storageInstance
         .ref(image.path)
         .delete();

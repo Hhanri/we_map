@@ -22,7 +22,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final StreamController<List<LogModel>> logsController = StreamController<List<LogModel>>();
   final BehaviorSubject<double> radiusObs = BehaviorSubject<double>.seeded(0);
   final BehaviorSubject<LatLng> centerObs = BehaviorSubject<LatLng>();
-  MapBloc({required this.firebaseService, required this.authService}) : super(MainInitial()) {
+  MapBloc({required this.firebaseService, required this.authService}) : super(const MainInitial(isLoading: false)) {
 
     void listenToLogs() async {
       if (!isClosed) {
@@ -33,15 +33,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         }).listen((event) {logsController.add(event);});
       }
     }
-
-    on<MainInitializeEvent>((event, emit) async {
-      if (await LocationService.getLocationPermission()) {
-        final target = await LocationService.getLocation();
-        final camera = CameraPosition(target: target.latLngFromPosition(), zoom: 12);
-        centerObs.add(camera.target);
-        emit(MainInitializedState(camera: camera));
-      }
-    });
 
     on<LoadMapControllerEvent>((event, emit) {
       mapController = event.controller;
@@ -62,26 +53,34 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
     });
 
-    on<CenterCameraEvent>((event, emit) async {
-      if (await LocationService.getLocationPermission()) {
-        final Position position = await LocationService.getLocation();
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(target: position.latLngFromPosition(), zoom: 18 )
-          )
-        );
-      } else {
-        print("NO LOCATION PERMISSION");
-      }
-    });
-
     double tempRadius = 0;
     LatLng tempCenter = const LatLng(0, 0);
+
+    on<MainInitializeEvent>((event, emit) async {
+      final target = await LocationService.getLocation();
+      final camera = CameraPosition(target: target.latLngFromPosition(), zoom: 12);
+      tempCenter =camera.target;
+      tempRadius = 9185.5;
+      add(CameraStopEvent());
+      emit(MainInitializedState(camera: camera, isLoading: false));
+    });
+
+    on<RequestPermissionEvent>((event, emit) async {
+      emit(const NoLocationPermissionState(isLoading: true));
+
+        final bool value = await LocationService.getLocationPermission();
+        if (value) {
+          add(MainInitializeEvent());
+        } else {
+          emit(const NoLocationPermissionState(isLoading: false, errorMessage: "PERMISSION DENIED"));
+        }
+    });
 
     on<CameraMoveEvent>((event, emit) async {
       final LatLngBounds region = await mapController.getVisibleRegion();
       final double radius = firebaseService.getDistance(northeast: region.northeast, southwest: region.southwest) / 2;
       tempRadius = radius;
+      print("RADIUS = $tempRadius");
       tempCenter = event.center;
     });
 
