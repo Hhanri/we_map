@@ -1,4 +1,5 @@
 import 'package:we_map/blocs/auth_bloc/auth_bloc.dart';
+import 'package:we_map/constants/theme.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
@@ -34,9 +35,7 @@ class MyApp extends StatelessWidget {
                 alwaysUse24HourFormat: true), child: child!);
           },
           title: 'Fire Hydrant Mapper',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
+          theme: AppTheme.theme,
           navigatorKey: AppRouter.navigatorKey,
           initialRoute: '/',
           onGenerateRoute: AppRouter().onGenerate,

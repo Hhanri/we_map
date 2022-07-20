@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/models/log_model.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
+import 'package:we_map/widgets/app_bar_widget.dart';
 import 'package:we_map/widgets/archives_list_view_widget.dart';
 
 class LogViewPage extends StatelessWidget {
@@ -12,7 +13,7 @@ class LogViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: const DefaultAppBarWidget(),
       body: Padding(
         padding: DisplayConstants.scaffoldPadding,
         child: Column(
