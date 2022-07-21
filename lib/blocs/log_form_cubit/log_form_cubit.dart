@@ -22,6 +22,7 @@ class LogFormCubit extends Cubit<LogFormState> {
   final FirebaseFirestoreService firebaseService;
   final StreamController<List<ArchiveModel>> archivesStreamController = StreamController<List<ArchiveModel>>();
   LogFormCubit({required this.context, required this.initialLog, required this.firebaseService, required this.authService}) : super(const LogFormInitial(isLoading: false));
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController streetNameController = TextEditingController();
   final TextEditingController latitudeController = TextEditingController();
@@ -65,10 +66,7 @@ class LogFormCubit extends Cubit<LogFormState> {
   }
 
   Future<void> addArchive() async {
-    await tryCatch(
-      function: () async => await firebaseService.setArchive(ArchiveModel.emptyArchive(parentLogUid: initialLog.logUid, parentLogId: initialLog.logId, archiveUid: authService.getUserId)),
-      shouldPop: false
-    );
+    AppRouter.pushNamed(AppRouter.newArchiveFormRoute, arguments: initialLog);
   }
 
   void deleteArchive(ArchiveModel archive) {

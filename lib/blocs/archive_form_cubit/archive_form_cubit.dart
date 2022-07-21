@@ -8,7 +8,6 @@ import 'package:we_map/models/image_model.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
-import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,50 +21,15 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   final StreamController<List<ImageModel>> imagesStreamController = StreamController<List<ImageModel>>();
   ArchiveFormCubit({required this.initialArchive, required this.context, required this.firebaseService, required this.authService}) : super(const ArchiveFormInitial(isLoading: false));
 
-  late DateTime date;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController dateController = TextEditingController();
   final TextEditingController waterLevelController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final ImagePicker picker = ImagePicker();
 
   void init() {
     imagesStreamController.addStream(firebaseService.getImagesStream(archive: initialArchive));
-    date = initialArchive.date;
-    dateController.text = initialArchive.date.formatDate();
     waterLevelController.text = initialArchive.waterLevel.toString();
     noteController.text = initialArchive.note;
-  }
-
-  void changeDate(DateTime newDate) {
-    date = newDate;
-    dateController.text = date.formatDate();
-  }
-
-  Future<void> pickDateTime() async {
-    TimeOfDay? newTime;
-    DateTime? newDate;
-
-    newDate = await showDatePicker(
-      context: context,
-      initialDate: initialArchive.date,
-      firstDate: DateTime(1990),
-      lastDate: DateTime.now()
-    );
-
-    if (newDate != null) {
-
-      newTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now()
-      );
-    }
-
-    if (newDate != null && newTime != null) {
-      changeDate(
-        DateTime(newDate.year, newDate.month, newDate.day, newTime.hour, newTime.minute)
-      );
-    }
   }
 
   void deleteArchive() {
@@ -79,7 +43,7 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
 
   void editArchive() {
     if (!formKey.currentState!.validate()) return;
-    final DateTime newDate = date;
+    final DateTime newDate = initialArchive.date;
     final double newWaterLevel = double.parse(waterLevelController.text);
     final String newNote = noteController.text;
 
@@ -156,7 +120,6 @@ class ArchiveFormCubit extends Cubit<ArchiveFormState> {
   @override
   Future<void> close () {
     imagesStreamController.close();
-    dateController.dispose();
     waterLevelController.dispose();
     noteController.dispose();
     return super.close();

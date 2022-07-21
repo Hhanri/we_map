@@ -10,6 +10,7 @@ import 'package:we_map/pages/image_viewer_page.dart';
 import 'package:we_map/pages/log_form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:we_map/pages/log_view_page.dart';
+import 'package:we_map/pages/new_archive_form_page.dart';
 import 'package:we_map/pages/signin_page.dart';
 import 'package:we_map/pages/signup_page.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
@@ -25,6 +26,7 @@ class AppRouter {
       case logViewRoute: return returnPage(LogViewPage(log: settings.arguments as LogModel));
       case logFormRoute: return returnPage(LogFormPage(initialLog: settings.arguments as LogModel));
       case archiveViewRoute: return returnPage(ArchiveViewPage(archive: settings.arguments as ArchiveModel));
+      case newArchiveFormRoute: return returnPage(NewArchiveFormPage(parentLog: settings.arguments as LogModel));
       case archiveFormRoute: return returnPage(ArchiveFormPage(initialArchive: settings.arguments as ArchiveModel));
       case imageViewerRoute: return returnPage(ImageViewerPage(url: settings.arguments as String));
       default: return returnPage(const DefaultPage());
@@ -41,6 +43,7 @@ class AppRouter {
   static const String logFormRoute = '/logForm';
   static const String archiveViewRoute = '/archiveViewRoute';
   static const String archiveFormRoute = '/archiveForm';
+  static const String newArchiveFormRoute = '/newArchiveForm';
   static const String imageViewerRoute = '/imageViewer';
 
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();

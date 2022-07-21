@@ -52,12 +52,6 @@ class ArchiveFormPage extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      DatePickerTextFieldWidget(
-                        controller: context.read<ArchiveFormCubit>().dateController,
-                        onTap: () async {
-                          await context.read<ArchiveFormCubit>().pickDateTime();
-                        }
-                      ),
                       TextFormFieldWidget(
                         parameters: WaterLevelParameters(controller: context.read<ArchiveFormCubit>().waterLevelController)
                       ),
