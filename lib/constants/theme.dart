@@ -17,7 +17,6 @@ class AppTheme {
 
   static const Gradient linearGradient = LinearGradient(
     colors: [primaryColor, primary2Color],
-    stops: [0.0, 0.8],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter
   );
