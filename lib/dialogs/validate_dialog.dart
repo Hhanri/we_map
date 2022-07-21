@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/widgets/text_button_widget.dart';
 
@@ -22,7 +23,7 @@ Future<T?> showValidateDialog<T>({
           ),
           TextButtonWidget(
             onPressed: () {
-              AppRouter.pop('continue');
+              AppRouter.pop(AppStringsConstants.continueString);
             },
             text: 'OK'
           )

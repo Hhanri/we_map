@@ -13,10 +13,10 @@ class LoadMapControllerEvent extends MapEvent{
   LoadMapControllerEvent({required this.controller});
 }
 
-class AddLogEvent extends MapEvent {
+class AddTopicEvent extends MapEvent {
   final BuildContext context;
-  final LogModel log;
-  AddLogEvent({required this.context, required this.log});
+  final TopicModel topic;
+  AddTopicEvent({required this.context, required this.topic});
 }
 
 class AddTemporaryMarker extends MapEvent {

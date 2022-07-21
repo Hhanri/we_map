@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:we_map/constants/firebase_constants.dart';
-import 'package:we_map/models/archive_model.dart';
+import 'package:we_map/models/post_model.dart';
 import 'package:we_map/models/image_model.dart';
-import 'package:we_map/models/log_model.dart';
+import 'package:we_map/models/topic_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:we_map/utils/extensions.dart';
@@ -16,52 +16,53 @@ class FirebaseFirestoreService {
   final FirebaseStorage storageInstance = FirebaseStorage.instance;
   final Geoflutterfire geo = Geoflutterfire();
 
-  Future<void> setLog({required LogModel logModel}) async {
+  Future<void> setTopic({required TopicModel topicModel}) async {
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(logModel.geoPoint.hash)
-      .set(LogModel.toJson(model: logModel));
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(topicModel.geoPoint.hash)
+      .set(TopicModel.toJson(model: topicModel));
   }
 
-  Future<void> deleteLog({required LogModel log}) async {
-    //delete log
+  Future<void> deleteTopic({required TopicModel topic}) async {
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(log.logId)
-      .collection(FirebaseConstants.archivesCollection)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(topic.topicId)
+      .collection(FirebaseConstants.postsCollection)
       .get()
-      .then((archivesDocs) {
-        Future.forEach(archivesDocs.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
-          await deleteArchive(archive: ArchiveModel.fromJson(doc.data()));
+      .then((postsDocs) {
+        Future.forEach(postsDocs.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
+          await deletePost(post: PostModel.fromJson(doc.data()));
         });
       });
 
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(log.logId)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(topic.topicId)
       .delete();
   }
 
-  Future<void> setArchive({required ArchiveModel archive, required List<XFile> images}) async {
+  Future<void> setPost({required PostModel post, required List<XFile> images}) async {
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(archive.parentLogId)
-      .collection(FirebaseConstants.archivesCollection)
-      .doc(archive.archiveId)
-      .set(ArchiveModel.toJson(archive));
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(post.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(post.postId)
+      .set(PostModel.toJson(post));
+
     if (images.isNotEmpty) {
+      print("PHOTOS");
       for (XFile file in images) {
-        uploadImage(parentArchive: archive, image: file);
+        uploadImage(parentPost: post, image: file);
       }
     }
   }
 
-  Future<void> deleteArchive({required ArchiveModel archive}) async {
+  Future<void> deletePost({required PostModel post}) async {
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(archive.parentLogId)
-      .collection(FirebaseConstants.archivesCollection)
-      .doc(archive.archiveId)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(post.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(post.postId)
       .collection(FirebaseConstants.imagesCollection)
       .get()
       .then((imagesDocs) {
@@ -71,35 +72,35 @@ class FirebaseFirestoreService {
       });
 
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(archive.parentLogId)
-      .collection(FirebaseConstants.archivesCollection)
-      .doc(archive.archiveId)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(post.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(post.postId)
       .delete();
   }
 
-  Future<void> updateLog({required LogModel oldLog, required LogModel newLog}) async {
-    if (newLog != oldLog) {
-      await setLog(logModel: newLog);
+  Future<void> updateTopic({required TopicModel oldTopic, required TopicModel newTopic}) async {
+    if (newTopic != oldTopic) {
+      await setTopic(topicModel: newTopic);
     }
   }
 
   Future<void> setImage({required ImageModel imageModel}) async {
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(imageModel.parentLogId)
-      .collection(FirebaseConstants.archivesCollection)
-      .doc(imageModel.parentArchiveId)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(imageModel.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(imageModel.parentPostId)
       .collection(FirebaseConstants.imagesCollection)
       .add(ImageModel.toJson(imageModel));
   }
 
-  Future<void> uploadImage({required ArchiveModel parentArchive, required XFile image}) async {
+  Future<void> uploadImage({required PostModel parentPost, required XFile image}) async {
     final ImageModel imageModel = ImageModel(
         uid: authInstance.currentUser!.uid,
-        parentLogId: parentArchive.parentLogId,
-        parentArchiveId: parentArchive.archiveId,
-        path: "logs/${parentArchive.uid}/${parentArchive.parentLogId}/archives/${parentArchive.archiveId}/images/${image.name}"
+        parentTopicId: parentPost.parentTopicId,
+        parentPostId: parentPost.postId,
+        path: "topics/${parentPost.uid}/${parentPost.parentTopicId}/posts/${parentPost.postId}/images/${image.name}"
     );
     final Reference ref = storageInstance.ref(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
@@ -118,10 +119,10 @@ class FirebaseFirestoreService {
         .delete();
 
     await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(image.parentLogId)
-      .collection(FirebaseConstants.archivesCollection)
-      .doc(image.parentArchiveId)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(image.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(image.parentPostId)
       .collection(FirebaseConstants.imagesCollection)
       .where(FirebaseConstants.path, isEqualTo: image.path)
       .get()
@@ -137,27 +138,27 @@ class FirebaseFirestoreService {
     return downloadURL;
   }
 
-  Stream<List<LogModel>> getLogsStream() {
+  Stream<List<TopicModel>> getTopicsStream() {
     return firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
+      .collection(FirebaseConstants.topicsCollection)
       .snapshots()
       .map((event) {
         return event.docs.map((doc) {
-          return LogModel.fromJson(doc.data());
+          return TopicModel.fromJson(doc.data());
         }).toList();
       });
   }
 
   //GeoFlutterFire uses radius as Km, Google Maps' radius is in meters
-  Stream<List<LogModel>> getLogsStreamRadius({required GeoFirePoint center, required double radius}) {
+  Stream<List<TopicModel>> getTopicsStreamRadius({required GeoFirePoint center, required double radius}) {
     print('RADIUS = $radius');
-    final ref = firestoreInstance.collection(FirebaseConstants.logsCollection);
+    final ref = firestoreInstance.collection(FirebaseConstants.topicsCollection);
     return geo
       .collection(collectionRef: ref)
       .within(center: center, radius: radius / 1000, field: FirebaseConstants.position, strictMode: true)
       .map((event) {
         return event.map((doc) {
-          return LogModel.fromJson(doc.data() as Map<String, dynamic>);
+          return TopicModel.fromJson(doc.data() as Map<String, dynamic>);
         }).toList();
     });
   }
@@ -166,26 +167,26 @@ class FirebaseFirestoreService {
     return GeoFirePoint.distanceBetween(to: southwest.coordinatesFromLatLng(), from: northeast.coordinatesFromLatLng())*1000;
   }
 
-  Stream<List<ArchiveModel>> getArchivesStream({required LogModel log}) {
+  Stream<List<PostModel>> getPostsStream({required TopicModel topic}) {
     return firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(log.logId)
-      .collection(FirebaseConstants.archivesCollection)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(topic.topicId)
+      .collection(FirebaseConstants.postsCollection)
       .orderBy(FirebaseConstants.date)
       .snapshots()
       .map((event) {
         return event.docs.map((doc) {
-          return ArchiveModel.fromJson(doc.data());
+          return PostModel.fromJson(doc.data());
         }).toList();
       });
   }
 
-  Stream<List<ImageModel>> getImagesStream({required ArchiveModel archive}) {
+  Stream<List<ImageModel>> getImagesStream({required PostModel post}) {
     return firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(archive.parentLogId)
-      .collection(FirebaseConstants.archivesCollection)
-      .doc(archive.archiveId)
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(post.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(post.postId)
       .collection(FirebaseConstants.imagesCollection)
       .snapshots()
       .map((event) {

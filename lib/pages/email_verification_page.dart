@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/blocs/email_verification_cubit/email_verification_cubit.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
@@ -19,7 +20,7 @@ class EmailVerificationPage extends StatelessWidget {
           child: BlocConsumer<EmailVerificationCubit, EmailVerificationState>(
             listener: (context, state) {
               if (state.isLoading) {
-                LoadingScreen.instance().show(context: context, text: 'loading...');
+                LoadingScreen.instance().show(context: context, text: AppStringsConstants.loading);
               } else {
                 LoadingScreen.instance().hide();
               }
@@ -34,12 +35,12 @@ class EmailVerificationPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Please click on the link you've received by email to activate your account"),
+                    const Text(AppStringsConstants.emailConfirmText),
                     TextButton(
                       onPressed: () {
                         context.read<EmailVerificationCubit>().resendLink();
                       },
-                      child: const Text('Resend link'))
+                      child: const Text(AppStringsConstants.resendLink))
                   ],
                 ),
               );

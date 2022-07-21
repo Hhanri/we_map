@@ -1,5 +1,5 @@
 import 'package:we_map/blocs/map_bloc/map_bloc.dart';
-import 'package:we_map/models/log_model.dart';
+import 'package:we_map/models/topic_model.dart';
 import 'package:we_map/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,25 +11,25 @@ class MapWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //local temporary marker stream
-    return StreamBuilder<LogModel?>(
-      stream: context.read<MapBloc>().tempLogStream.stream,
-      builder: (context, tempLog) {
+    return StreamBuilder<TopicModel?>(
+      stream: context.read<MapBloc>().tempTopicStream.stream,
+      builder: (context, tempTopic) {
 
         //server markers stream
-        return StreamBuilder<List<LogModel>>(
-            stream: context.read<MapBloc>().logsController.stream,
+        return StreamBuilder<List<TopicModel>>(
+            stream: context.read<MapBloc>().topicsController.stream,
             initialData: const [],
-            builder: (context, serverLogs) {
-              if (serverLogs.hasData) {
+            builder: (context, serverTopics) {
+              if (serverTopics.hasData) {
 
-                Set<Marker> markers = LogModel.getMarkers(
+                Set<Marker> markers = TopicModel.getMarkers(
                   context: context,
-                  logs: serverLogs.data!,
+                  topics: serverTopics.data!,
                   uid: context.read<MapBloc>().authService.getUserId
                 );
                 print("MARKERS = ${markers.length}");
-                if (tempLog.hasData) {
-                  markers.add(LogModel.getTempMarker(context: context, log: tempLog.data!));
+                if (tempTopic.hasData) {
+                  markers.add(TopicModel.getTempMarker(context: context, topic: tempTopic.data!));
                 }
 
                 return GoogleMap(

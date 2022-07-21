@@ -85,74 +85,8 @@ class TextFormParameters {
   });
 }
 
-class WaterLevelParameters extends TextFormParameters{
-  WaterLevelParameters({
-    required TextEditingController controller
-  }) : super(
-    controller: controller,
-    label: "Water Level",
-    maxLines: 1,
-    validator: (value) {
-      if (double.tryParse(value ?? "") != null) {
-        return null;
-      }
-      return "Not a number";
-    },
-    keyboardType: TextInputType.number,
-    inputFormatters: [
-      FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-      FilteringTextInputFormatter.singleLineFormatter,
-      FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
-    ]
-  );
-}
-
-class LatitudeParameters extends TextFormParameters{
-  LatitudeParameters({
-    required TextEditingController controller
-  }) : super(
-    controller: controller,
-    label: "Latitude",
-    maxLines: 1,
-    validator: (value) {
-      if (double.tryParse(value ?? "") != null) {
-        return null;
-      }
-      return "Not a number";
-    },
-    keyboardType: TextInputType.number,
-    inputFormatters: [
-      FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)')),
-      FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-      FilteringTextInputFormatter.singleLineFormatter,
-    ]
-  );
-}
-
-class LongitudeParameters extends TextFormParameters{
-  LongitudeParameters({
-    required TextEditingController controller
-  }) : super(
-    controller: controller,
-    label: "Longitude",
-    maxLines: 1,
-    validator: (value) {
-      if (double.tryParse(value ?? "") != null) {
-        return null;
-      }
-      return "Not a number";
-    },
-    keyboardType: TextInputType.number,
-    inputFormatters: [
-      FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-      FilteringTextInputFormatter.singleLineFormatter,
-      FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
-    ]
-  );
-}
-
-class StreetNameParameters extends TextFormParameters{
-  StreetNameParameters({
+class TitleParameters extends TextFormParameters{
+  TitleParameters({
     required TextEditingController controller
   }) : super(
     controller: controller,
@@ -168,8 +102,8 @@ class StreetNameParameters extends TextFormParameters{
   );
 }
 
-class NoteParameters extends TextFormParameters {
-  NoteParameters({
+class DescriptionParameters extends TextFormParameters {
+  DescriptionParameters({
     required TextEditingController controller
   }) : super(
     controller: controller,

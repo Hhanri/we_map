@@ -3,21 +3,21 @@ import 'package:we_map/constants/firebase_constants.dart';
 
 class ImageModel extends Equatable {
   final String uid;
-  final String parentLogId;
-  final String parentArchiveId;
+  final String parentTopicId;
+  final String parentPostId;
   final String path;
   const ImageModel({
     required this.uid,
-    required this.parentLogId,
-    required this.parentArchiveId,
+    required this.parentTopicId,
+    required this.parentPostId,
     required this.path
   });
 
   static Map<String, dynamic> toJson(ImageModel image) {
     return {
       FirebaseConstants.uid: image.uid,
-      FirebaseConstants.parentLogId: image.parentLogId,
-      FirebaseConstants.parentArchiveId: image.parentArchiveId,
+      FirebaseConstants.parentTopicId: image.parentTopicId,
+      FirebaseConstants.parentPostId: image.parentPostId,
       FirebaseConstants.path: image.path
     };
   }
@@ -25,13 +25,13 @@ class ImageModel extends Equatable {
   static ImageModel fromJson(Map<String, dynamic> json) {
     return ImageModel(
       uid: FirebaseConstants.uid,
-      parentLogId: json[FirebaseConstants.parentLogId],
-      parentArchiveId: json[FirebaseConstants.parentArchiveId],
+      parentTopicId: json[FirebaseConstants.parentTopicId],
+      parentPostId: json[FirebaseConstants.parentPostId],
       path: json[FirebaseConstants.path],
     );
   }
 
   @override
   // TODO: implement props
-  List<Object?> get props => [parentArchiveId, path];
+  List<Object?> get props => [parentPostId, path];
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:we_map/blocs/archive_form_bloc/archive_form_bloc.dart';
+import 'package:we_map/blocs/post_form_bloc/post_form_bloc.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/widgets/image_widget.dart';
@@ -86,7 +86,7 @@ class AddPhotoButtonWidget extends StatelessWidget {
           child: TextButton.icon(
             onPressed: () {
               AppRouter.pop();
-              context.read<ArchiveFormBloc>().add(AddPhotoEvent(imageSource: imageSource));
+              context.read<PostFormBloc>().add(AddPhotoEvent(imageSource: imageSource));
             },
             icon: Icon(icon),
             label: Text(label)

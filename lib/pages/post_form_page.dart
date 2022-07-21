@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:we_map/blocs/archive_form_bloc/archive_form_bloc.dart';
+import 'package:we_map/blocs/post_form_bloc/post_form_bloc.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
-import 'package:we_map/models/log_model.dart';
+import 'package:we_map/models/topic_model.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
@@ -11,20 +11,20 @@ import 'package:we_map/widgets/app_bar_widget.dart';
 import 'package:we_map/widgets/local_images_list_view_widget.dart';
 import 'package:we_map/widgets/text_form_field_widget.dart';
 
-class ArchiveFormPage extends StatelessWidget {
-  final LogModel parentLog;
-  const ArchiveFormPage({Key? key, required this.parentLog}) : super(key: key);
+class PostFormPage extends StatelessWidget {
+  final TopicModel parentTopic;
+  const PostFormPage({Key? key, required this.parentTopic}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ArchiveFormBloc>(
-      create: (context) => ArchiveFormBloc(
+    return BlocProvider<PostFormBloc>(
+      create: (context) => PostFormBloc(
           context: context,
           firebaseService: RepositoryProvider.of<FirebaseFirestoreService>(context),
           authService: RepositoryProvider.of<FirebaseAuthService>(context),
-          parentLog: parentLog
+          parentTopic: parentTopic
       ),
-      child: BlocConsumer<ArchiveFormBloc, ArchiveFormState>(
+      child: BlocConsumer<PostFormBloc, PostFormState>(
         listener: (context, state) {
           if (state.isLoading) {
             LoadingScreen.instance().show(context: context, text: 'loading...');
@@ -39,26 +39,26 @@ class ArchiveFormPage extends StatelessWidget {
           return Scaffold(
             appBar: FormAppBarWidget(
               onDelete: () {
-                context.read<ArchiveFormBloc>().add(DeleteArchiveEvent());
+                context.read<PostFormBloc>().add(DeletePostEvent());
               },
               onValidate: () {
-                context.read<ArchiveFormBloc>().add(AddArchiveEvent());
+                context.read<PostFormBloc>().add(AddPostEvent());
               },
             ),
             body: Padding(
               padding: DisplayConstants.scaffoldPadding,
               child: Form(
-                key: context.read<ArchiveFormBloc>().formKey,
+                key: context.read<PostFormBloc>().formKey,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       TextFormFieldWidget(
-                        parameters: WaterLevelParameters(controller: context.read<ArchiveFormBloc>().waterLevelController)
+                        parameters: TitleParameters(controller: context.read<PostFormBloc>().postTitleController)
                       ),
                       TextFormFieldWidget(
-                        parameters: NoteParameters(controller: context.read<ArchiveFormBloc>().noteController)
+                        parameters: DescriptionParameters(controller: context.read<PostFormBloc>().postDescriptionController)
                       ),
-                      LocalImagesListViewWidget(images: (state as ArchiveFormInitial).images)
+                      LocalImagesListViewWidget(images: (state as PostFormInitial).images)
                     ],
                   ),
                 ),

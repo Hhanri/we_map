@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
-import 'package:we_map/models/log_model.dart';
+import 'package:we_map/models/topic_model.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/services/location_service.dart';
@@ -17,35 +17,35 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final FirebaseFirestoreService firebaseService;
   final FirebaseAuthService authService;
   late GoogleMapController mapController;
-  final StreamController<LogModel?> tempLogStream = StreamController<LogModel?>.broadcast();
-  final StreamController<List<LogModel>> logsController = StreamController<List<LogModel>>();
+  final StreamController<TopicModel?> tempTopicStream = StreamController<TopicModel?>.broadcast();
+  final StreamController<List<TopicModel>> topicsController = StreamController<List<TopicModel>>();
   final BehaviorSubject<double> radiusObs = BehaviorSubject<double>.seeded(0);
   final BehaviorSubject<LatLng> centerObs = BehaviorSubject<LatLng>();
   MapBloc({required this.firebaseService, required this.authService}) : super(const MainInitial(isLoading: false)) {
 
-    void listenToLogs() async {
+    void listenToTopics() async {
       if (!isClosed) {
         radiusObs.switchMap((radius) {
           return centerObs.switchMap((center) {
-            return firebaseService.getLogsStreamRadius(center: center.geoFireFromLatLng(), radius: radius);
+            return firebaseService.getTopicsStreamRadius(center: center.geoFireFromLatLng(), radius: radius);
           });
-        }).listen((event) {logsController.add(event);});
+        }).listen((event) {topicsController.add(event);});
       }
     }
 
     on<LoadMapControllerEvent>((event, emit) {
       mapController = event.controller;
-      listenToLogs();
+      listenToTopics();
     });
 
-    on<AddLogEvent>((event, emit) async {
-      await firebaseService.setLog(logModel: event.log);
-      tempLogStream.sink.add(null);
+    on<AddTopicEvent>((event, emit) async {
+      await firebaseService.setTopic(topicModel: event.topic);
+      tempTopicStream.sink.add(null);
     });
 
     on<AddTemporaryMarker>((event, emit) async {
-      tempLogStream.add(
-        LogModel.emptyLog(
+      tempTopicStream.add(
+        TopicModel.emptyTopic(
           geoFirePoint: event.point.geoFireFromLatLng(),
           uid: authService.getUserId
         )
@@ -92,8 +92,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future<void> close() {
     radiusObs.close();
     centerObs.close();
-    logsController.close();
-    tempLogStream.close();
+    topicsController.close();
+    tempTopicStream.close();
     mapController.dispose();
     return super.close();
   }
