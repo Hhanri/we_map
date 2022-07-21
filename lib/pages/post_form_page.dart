@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/blocs/post_form_bloc/post_form_bloc.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/topic_model.dart';
@@ -27,7 +28,7 @@ class PostFormPage extends StatelessWidget {
       child: BlocConsumer<PostFormBloc, PostFormState>(
         listener: (context, state) {
           if (state.isLoading) {
-            LoadingScreen.instance().show(context: context, text: 'loading...');
+            LoadingScreen.instance().show(context: context, text: AppStringsConstants.loading);
           } else {
             LoadingScreen.instance().hide();
           }
@@ -38,6 +39,7 @@ class PostFormPage extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             appBar: FormAppBarWidget(
+              text: AppStringsConstants.postTitle,
               onDelete: () {
                 context.read<PostFormBloc>().add(DeletePostEvent());
               },

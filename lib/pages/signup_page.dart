@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/blocs/sign_up_cubit/sign_up_cubit.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/router/router.dart';
@@ -21,9 +22,8 @@ class SignUpPage extends StatelessWidget {
         child: BlocConsumer<SignUpCubit, SignUpState>(
           listener: (context, state) {
             if (state.isLoading) {
-              LoadingScreen.instance().show(context: context, text: 'loading...');
+              LoadingScreen.instance().show(context: context, text: AppStringsConstants.loading);
             } else {
-              print("HIDE LOADING SCREEN");
               LoadingScreen.instance().hide();
             }
             if (state.errorMessage != null) {
@@ -53,14 +53,14 @@ class SignUpPage extends StatelessWidget {
                       onPressed: () {
                         context.read<SignUpCubit>().signUp();
                       },
-                      text: 'Sign Up',
+                      text: AppStringsConstants.signUp,
                     ),
                     const Spacer(),
                     TextButtonWidget(
                       onPressed: () {
                         AppRouter.pop();
                       },
-                      text: "Sign In"
+                      text: AppStringsConstants.signIn
                     )
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:we_map/blocs/topic_form_cubit/topic_form_cubit.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/topic_model.dart';
@@ -28,7 +29,7 @@ class TopicFormPage extends StatelessWidget {
       child: BlocConsumer<TopicFormCubit, TopicFormState>(
         listener: (context, state) {
           if (state.isLoading) {
-            LoadingScreen.instance().show(context: context, text: 'loading...');
+            LoadingScreen.instance().show(context: context, text: AppStringsConstants.loading);
           } else {
             LoadingScreen.instance().hide();
           }
@@ -39,6 +40,7 @@ class TopicFormPage extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             appBar: FormAppBarWidget(
+              text: AppStringsConstants.topicTitle,
               onDelete: () {
                 context.read<TopicFormCubit>().deleteTopic();
               },

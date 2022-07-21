@@ -1,4 +1,5 @@
 import 'package:we_map/blocs/map_bloc/map_bloc.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
@@ -28,7 +29,7 @@ class HomePage extends StatelessWidget {
           body: BlocConsumer<MapBloc, MapState>(
             listener: (context, state) {
               if (state.isLoading) {
-                LoadingScreen.instance().show(context: context, text: 'loading...');
+                LoadingScreen.instance().show(context: context, text: AppStringsConstants.loading);
               } else {
                 LoadingScreen.instance().hide();
               }

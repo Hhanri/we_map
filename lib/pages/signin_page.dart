@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/blocs/sign_in_cubit/sign_in_cubit.dart';
 import 'package:we_map/blocs/sign_in_cubit/sign_in_state.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/router/router.dart';
@@ -25,7 +26,7 @@ class SignInPage extends StatelessWidget {
             listener: (context, state) {
               if (state.isLoading) {
                 LoadingScreen.instance().show(
-                    context: context, text: 'loading...');
+                    context: context, text: AppStringsConstants.loading);
               } else {
                 LoadingScreen.instance().hide();
               }
@@ -50,7 +51,7 @@ class SignInPage extends StatelessWidget {
                         parameters: PasswordParameters(controller: context.read<SignInCubit>().passwordController),
                       ),
                       ElevatedButtonWidget(
-                        text: "Sign In",
+                        text: AppStringsConstants.signIn,
                         onPressed: () {
                           context.read<SignInCubit>().signIn();
                         }
@@ -60,7 +61,7 @@ class SignInPage extends StatelessWidget {
                         onPressed: () {
                           AppRouter.pushNamed(AppRouter.signUpRoute);
                         },
-                        text: 'Create account'
+                        text: AppStringsConstants.createAccount
                       )
                     ],
                   ),

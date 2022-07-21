@@ -1,3 +1,4 @@
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/dialogs/generic_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ Future<void> showErrorMessage({
 }) {
   return showGenericDialog<void>(
     context: context,
-    title: "error",
+    title: AppStringsConstants.error,
     content: errorMessage,
   );
 }

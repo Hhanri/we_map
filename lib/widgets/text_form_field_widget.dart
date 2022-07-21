@@ -1,3 +1,4 @@
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +91,7 @@ class TitleParameters extends TextFormParameters{
     required TextEditingController controller
   }) : super(
     controller: controller,
-    label: "Street Name",
+    label: AppStringsConstants.title,
     maxLines: 1,
     validator: (value) => null,
     keyboardType: TextInputType.text,
@@ -107,7 +108,7 @@ class DescriptionParameters extends TextFormParameters {
     required TextEditingController controller
   }) : super(
     controller: controller,
-    label: "Note",
+    label: AppStringsConstants.description,
     maxLines: 13,
     validator: (value) => null,
     keyboardType: TextInputType.multiline,
@@ -122,11 +123,11 @@ class EmailParameters extends TextFormParameters {
     required TextEditingController controller
   }) : super(
     controller: controller,
-    label: 'Email',
+    label: AppStringsConstants.email,
     maxLines: 1,
     validator: (value) {
       if (value.isEmail()) return null;
-      return 'Not valid email';
+      return AppStringsConstants.notEmail;
     },
     keyboardType: TextInputType.emailAddress,
     inputFormatters: [
@@ -141,10 +142,10 @@ class PasswordParameters extends TextFormParameters {
     required TextEditingController controller
   }) : super(
     controller: controller,
-    label: 'Password',
+    label: AppStringsConstants.password,
     maxLines: 1,
     validator: (value) {
-      return value!.length >= 6 ? null : 'Password too short, needs at least 6 characters';
+      return value!.length >= 6 ? null : AppStringsConstants.shortPassword;
     },
     keyboardType: TextInputType.visiblePassword,
     inputFormatters: [
@@ -159,11 +160,11 @@ class PasswordConfirmationParameters extends TextFormParameters {
     required TextEditingController confirmationController
   }) : super(
     controller: confirmationController,
-    label: 'Password',
+    label: AppStringsConstants.confirmPassword,
     maxLines: 1,
     validator: (value) {
-      if (value!.length < 6) return 'Password too short, needs at least 6 characters';
-      if (value != mainController.text) return 'Password not matching';
+      if (value!.length < 6) return AppStringsConstants.shortPassword;
+      if (value != mainController.text) return AppStringsConstants.notMatching;
       return null;
     },
     keyboardType: TextInputType.visiblePassword,

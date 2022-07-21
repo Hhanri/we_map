@@ -32,11 +32,13 @@ class DefaultAppBarWidget extends StatelessWidget with PreferredSizeWidget {
 class FormAppBarWidget extends StatelessWidget with PreferredSizeWidget {
   final VoidCallback onValidate;
   final VoidCallback onDelete;
-  const FormAppBarWidget({Key? key, required this.onValidate, required this.onDelete}) : super(key: key);
+  final String text;
+  const FormAppBarWidget({Key? key, required this.onValidate, required this.onDelete, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultAppBarWidget(
+      title: text,
       actions: [
         IconButton(
           onPressed: onDelete,

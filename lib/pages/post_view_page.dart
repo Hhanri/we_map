@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/models/post_model.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
@@ -21,15 +22,15 @@ class PostViewPage extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                title: const Text('Date'),
+                title: const Text(AppStringsConstants.date),
                 trailing: Text(post.date.formatDate()),
               ),
               ListTile(
-                title: const Text('Title'),
+                title: const Text(AppStringsConstants.title),
                 trailing: Text(post.postTitle),
               ),
               ListTile(
-                title: const Text('Description'),
+                title: const Text(AppStringsConstants.description),
                 subtitle: Text(post.postDescription,),
               ),
               SizedBox(

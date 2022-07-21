@@ -50,7 +50,6 @@ class FirebaseFirestoreService {
       .set(PostModel.toJson(post));
 
     if (images.isNotEmpty) {
-      print("PHOTOS");
       for (XFile file in images) {
         uploadImage(parentPost: post, image: file);
       }
@@ -100,7 +99,7 @@ class FirebaseFirestoreService {
         uid: authInstance.currentUser!.uid,
         parentTopicId: parentPost.parentTopicId,
         parentPostId: parentPost.postId,
-        path: "topics/${parentPost.uid}/${parentPost.parentTopicId}/posts/${parentPost.postId}/images/${image.name}"
+        path: "${FirebaseConstants.topicsCollection}/${parentPost.uid}/${parentPost.parentTopicId}/${FirebaseConstants.postsCollection}/${parentPost.postId}/${FirebaseConstants.imagesCollection}/${image.name}"
     );
     final Reference ref = storageInstance.ref(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
