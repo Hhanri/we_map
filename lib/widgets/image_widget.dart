@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
+import 'package:we_map/constants/theme.dart';
 import 'package:we_map/models/image_model.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
@@ -32,10 +33,13 @@ class ImageWidget extends StatelessWidget {
                   },
                   child: Hero(
                     tag: url,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: url,
-                      placeholder: (context, _) => const LoadingWidget(),
+                    child: ClipRRect(
+                      borderRadius: DisplayConstants.circularBorderRadius,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: url,
+                        placeholder: (context, _) => const LoadingWidget(),
+                      ),
                     ),
                   ),
                 );

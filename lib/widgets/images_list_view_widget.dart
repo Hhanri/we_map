@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
+import 'package:we_map/constants/theme.dart';
 import 'package:we_map/models/image_model.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/widgets/image_widget.dart';
@@ -67,14 +68,20 @@ class AddPhotoButtonWidget extends StatelessWidget {
         );
       },
       child: Container(
+        margin: const EdgeInsets.all(8),
+        decoration: const BoxDecoration(
+          borderRadius: DisplayConstants.circularBorderRadius,
+          color: AppTheme.placeholderColor,
+        ),
         width: 100,
         height: 100,
-        color: Colors.black26,
+        alignment: Alignment.center,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add, size: 24,),
-            Text('add photo')
+          children: [
+            const Icon(Icons.add, size: 24, color: AppTheme.secondaryColor,),
+            Text('add photo', style: Theme.of(context).textTheme.headline5,)
           ],
         ),
       ),

@@ -24,7 +24,7 @@ class AppRouter {
       case homeRoute: return returnPage(const HomePage());
       case logViewRoute: return returnPage(LogViewPage(log: settings.arguments as LogModel));
       case logFormRoute: return returnPage(LogFormPage(initialLog: settings.arguments as LogModel));
-      case archiveViewRoute: return returnPage(ArchiveViewPage(archive: settings.arguments as ArchiveModel,));
+      case archiveViewRoute: return returnPage(ArchiveViewPage(archive: settings.arguments as ArchiveModel));
       case archiveFormRoute: return returnPage(ArchiveFormPage(initialArchive: settings.arguments as ArchiveModel));
       case imageViewerRoute: return returnPage(ImageViewerPage(url: settings.arguments as String));
       default: return returnPage(const DefaultPage());
