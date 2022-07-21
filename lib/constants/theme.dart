@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class DisplayConstants {
   static const EdgeInsets scaffoldPadding = EdgeInsets.symmetric(horizontal: 15, vertical: 2);
+  static const BorderRadius circularBorderRadius = BorderRadius.all(Radius.circular(16));
 }
 
 class AppTheme {
@@ -28,6 +29,12 @@ class AppTheme {
     color: backgroundColor,
   );
 
+  static const TextStyle textButtonTextStyle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: backgroundColor,
+  );
+
   static const TextStyle headerTextStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
@@ -48,8 +55,10 @@ class AppTheme {
 
   static const TextTheme textTheme = TextTheme(
     headline4: headerTextStyle,
+    headline5: elevatedButtonTextStyle,
     bodyText1: bodyTextStyle,
     bodyText2: placeholderTextStyle,
+    button: textButtonTextStyle,
   );
 
   //appbar

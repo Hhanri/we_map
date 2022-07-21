@@ -7,6 +7,7 @@ import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/archives_list_view_widget.dart';
 import 'package:we_map/widgets/app_bar_widget.dart';
+import 'package:we_map/widgets/text_button_widget.dart';
 import 'package:we_map/widgets/text_form_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,11 +68,11 @@ class LogFormPage extends StatelessWidget {
                         stream: context.read<LogFormCubit>().archivesStreamController.stream,
                       )
                     ),
-                    TextButton(
+                    TextButtonWidget(
                       onPressed: () async {
                         await context.read<LogFormCubit>().addArchive();
                       },
-                      child: const Text('add')
+                      text: 'Add'
                     )
                   ],
                 ),

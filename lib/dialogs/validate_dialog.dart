@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:we_map/router/router.dart';
+import 'package:we_map/widgets/text_button_widget.dart';
 
 Future<T?> showValidateDialog<T>({
   required BuildContext context,
@@ -13,17 +14,17 @@ Future<T?> showValidateDialog<T>({
         title: const Text('Alert'),
         content: Text('You are about to $action the $elementName'),
         actions: [
-          TextButton(
+          TextButtonWidget(
             onPressed: () {
               AppRouter.pop();
             },
-            child: const Text('Cancel')
+            text: 'Cancel'
           ),
-          TextButton(
+          TextButtonWidget(
             onPressed: () {
               AppRouter.pop('continue');
             },
-            child: const Text('OK')
+            text: 'OK'
           )
         ],
       );

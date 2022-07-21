@@ -7,7 +7,9 @@ import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
+import 'package:we_map/widgets/elevated_button_widget.dart';
 import 'package:we_map/widgets/root_page_widget.dart';
+import 'package:we_map/widgets/text_button_widget.dart';
 import 'package:we_map/widgets/text_form_field_widget.dart';
 
 class SignInPage extends StatelessWidget {
@@ -47,18 +49,18 @@ class SignInPage extends StatelessWidget {
                       TextFormFieldWidget(
                         parameters: PasswordParameters(controller: context.read<SignInCubit>().passwordController),
                       ),
-                      TextButton(
+                      ElevatedButtonWidget(
+                        text: "Sign In",
                         onPressed: () {
                           context.read<SignInCubit>().signIn();
-                        },
-                        child: const Text('SIGN IN'),
+                        }
                       ),
                       const Spacer(),
-                      TextButton(
+                      TextButtonWidget(
                         onPressed: () {
                           AppRouter.pushNamed(AppRouter.signUpRoute);
                         },
-                        child: const Text('Create account')
+                        text: 'Create account'
                       )
                     ],
                   ),

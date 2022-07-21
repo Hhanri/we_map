@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/blocs/sign_up_cubit/sign_up_cubit.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
+import 'package:we_map/router/router.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
+import 'package:we_map/widgets/elevated_button_widget.dart';
+import 'package:we_map/widgets/text_button_widget.dart';
 import 'package:we_map/widgets/text_form_field_widget.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -36,6 +39,7 @@ class SignUpPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    const Spacer(),
                     TextFormFieldWidget(
                       parameters: EmailParameters(controller: context.read<SignUpCubit>().emailController),
                     ),
@@ -45,11 +49,18 @@ class SignUpPage extends StatelessWidget {
                     TextFormFieldWidget(
                       parameters: PasswordConfirmationParameters(mainController: context.read<SignUpCubit>().passwordController, confirmationController: context.read<SignUpCubit>().passwordConfirmationController),
                     ),
-                    TextButton(
+                    ElevatedButtonWidget(
                       onPressed: () {
                         context.read<SignUpCubit>().signUp();
                       },
-                      child: const Text('sign up'),
+                      text: 'Sign Up',
+                    ),
+                    const Spacer(),
+                    TextButtonWidget(
+                      onPressed: () {
+                        AppRouter.pop();
+                      },
+                      text: "Sign In"
                     )
                   ],
                 ),

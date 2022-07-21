@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:we_map/router/router.dart';
+import 'package:we_map/widgets/text_button_widget.dart';
 
 Future<T?> showGenericDialog<T>({
   required BuildContext context,
@@ -13,11 +14,11 @@ Future<T?> showGenericDialog<T>({
         title: Text(title),
         content: Text(content),
         actions: [
-          TextButton(
+          TextButtonWidget(
             onPressed: () {
               AppRouter.pop();
             },
-            child: const Text('OK')
+            text: 'OK',
           )
         ],
       );
