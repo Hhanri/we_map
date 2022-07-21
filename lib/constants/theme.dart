@@ -14,6 +14,7 @@ class AppTheme {
   static const Color placeholderColor = Color(0xFF747474);
   static const Color textColor = Color(0xFF4F4747);
   static const Color backgroundColor = Colors.white;
+  static const Color errorColor = Colors.redAccent;
 
   static const Gradient linearGradient = LinearGradient(
     colors: [primaryColor, primary2Color],
