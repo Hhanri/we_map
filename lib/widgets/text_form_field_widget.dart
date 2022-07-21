@@ -1,3 +1,4 @@
+import 'package:we_map/constants/theme.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,17 +9,28 @@ class TextFormFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: parameters.controller,
-      decoration: InputDecoration(
-        label: Text(parameters.label),
-        //hintText: parameters.hint,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        controller: parameters.controller,
+        decoration: InputDecoration(
+          label: Text(parameters.label),
+          labelStyle: Theme.of(context).textTheme.bodyText2,
+          filled: true,
+          fillColor: AppTheme.secondaryColor,
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(width: 1, color: AppTheme.primary2Color),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(width: 1, color: AppTheme.primary2Color),
+          ),
+        ),
+        obscureText: (parameters is PasswordParameters || parameters is PasswordConfirmationParameters) ? true : false,
+        keyboardType: parameters.keyboardType,
+        inputFormatters: parameters.inputFormatters,
+        validator: parameters.validator,
+        maxLines: parameters.maxLines,
       ),
-      obscureText: (parameters is PasswordParameters || parameters is PasswordConfirmationParameters) ? true : false,
-      keyboardType: parameters.keyboardType,
-      inputFormatters: parameters.inputFormatters,
-      validator: parameters.validator,
-      maxLines: parameters.maxLines,
     );
   }
 }
@@ -53,7 +65,6 @@ class DatePickerTextFieldWidget extends StatelessWidget {
 class TextFormParameters {
   final TextEditingController controller;
   final String label;
-  final String hint;
   final int maxLines;
   final TextInputType keyboardType;
   final String? Function(String?) validator;
@@ -62,7 +73,6 @@ class TextFormParameters {
   TextFormParameters({
     required this.controller,
     required this.label,
-    required this.hint,
     required this.maxLines,
     required this.validator,
     required this.keyboardType,
@@ -75,7 +85,6 @@ class WaterLevelParameters extends TextFormParameters{
     required TextEditingController controller
   }) : super(
     controller: controller,
-    hint: "458974",
     label: "Water Level",
     maxLines: 1,
     validator: (value) {
@@ -98,7 +107,6 @@ class LatitudeParameters extends TextFormParameters{
     required TextEditingController controller
   }) : super(
     controller: controller,
-    hint: "48.974",
     label: "Latitude",
     maxLines: 1,
     validator: (value) {
@@ -121,7 +129,6 @@ class LongitudeParameters extends TextFormParameters{
     required TextEditingController controller
   }) : super(
     controller: controller,
-    hint: "48.974",
     label: "Longitude",
     maxLines: 1,
     validator: (value) {
@@ -144,7 +151,6 @@ class StreetNameParameters extends TextFormParameters{
     required TextEditingController controller
   }) : super(
     controller: controller,
-    hint: "89 rue du Pont",
     label: "Street Name",
     maxLines: 1,
     validator: (value) => null,
@@ -162,7 +168,6 @@ class NoteParameters extends TextFormParameters {
     required TextEditingController controller
   }) : super(
     controller: controller,
-    hint: "something to jot down",
     label: "Note",
     maxLines: 13,
     validator: (value) => null,
@@ -178,7 +183,6 @@ class EmailParameters extends TextFormParameters {
     required TextEditingController controller
   }) : super(
     controller: controller,
-    hint: 'example@gmail.com',
     label: 'Email',
     maxLines: 1,
     validator: (value) {
@@ -198,7 +202,6 @@ class PasswordParameters extends TextFormParameters {
     required TextEditingController controller
   }) : super(
     controller: controller,
-    hint: '123456',
     label: 'Password',
     maxLines: 1,
     validator: (value) {
@@ -217,7 +220,6 @@ class PasswordConfirmationParameters extends TextFormParameters {
     required TextEditingController confirmationController
   }) : super(
     controller: confirmationController,
-    hint: '123456',
     label: 'Password',
     maxLines: 1,
     validator: (value) {
