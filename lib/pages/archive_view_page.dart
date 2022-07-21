@@ -5,7 +5,7 @@ import 'package:we_map/models/archive_model.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:we_map/widgets/app_bar_widget.dart';
-import 'package:we_map/widgets/images_list_view_widget.dart';
+import 'package:we_map/widgets/network_images_list_view_widget.dart';
 
 class ArchiveViewPage extends StatelessWidget {
   final ArchiveModel archive;
@@ -34,9 +34,8 @@ class ArchiveViewPage extends StatelessWidget {
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.width*0.5,
-                child: ImagesListViewWidget(
+                child: NetworkImagesListViewWidget(
                   stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getImagesStream(archive: archive),
-                  isEditing: false
                 ),
               )
             ],

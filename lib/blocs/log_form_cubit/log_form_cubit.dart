@@ -66,7 +66,7 @@ class LogFormCubit extends Cubit<LogFormState> {
   }
 
   Future<void> addArchive() async {
-    AppRouter.pushNamed(AppRouter.newArchiveFormRoute, arguments: initialLog);
+    AppRouter.pushNamed(AppRouter.archiveFormRoute, arguments: initialLog);
   }
 
   void deleteArchive(ArchiveModel archive) {

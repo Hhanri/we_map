@@ -4,9 +4,9 @@ import 'package:we_map/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class ArchivesListViewWidget extends StatelessWidget {
-  final bool isEditing;
   final Stream<List<ArchiveModel>> stream;
-  const ArchivesListViewWidget({Key? key, required this.isEditing, required this.stream}) : super(key: key);
+  final bool isOwner;
+  const ArchivesListViewWidget({Key? key, required this.stream, required this.isOwner}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ArchivesListViewWidget extends StatelessWidget {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final ArchiveModel archive = snapshot.data![index];
-              return ArchiveListTileWidget(archive: archive, isEditing: isEditing);
+              return ArchiveListTileWidget(archive: archive, isOwner: isOwner,);
             }
           );
         }

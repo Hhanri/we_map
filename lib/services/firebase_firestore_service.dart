@@ -42,13 +42,18 @@ class FirebaseFirestoreService {
       .delete();
   }
 
-  Future<void> setArchive(ArchiveModel archive) async {
+  Future<void> setArchive({required ArchiveModel archive, required List<XFile> images}) async {
     await firestoreInstance
       .collection(FirebaseConstants.logsCollection)
       .doc(archive.parentLogId)
       .collection(FirebaseConstants.archivesCollection)
       .doc(archive.archiveId)
       .set(ArchiveModel.toJson(archive));
+    if (images.isNotEmpty) {
+      for (XFile file in images) {
+        uploadImage(parentArchive: archive, image: file);
+      }
+    }
   }
 
   Future<void> deleteArchive({required ArchiveModel archive}) async {
@@ -73,18 +78,8 @@ class FirebaseFirestoreService {
       .delete();
   }
 
-  Future<void> updateArchiveWithoutImages({required ArchiveModel newArchive}) async {
-    await firestoreInstance
-      .collection(FirebaseConstants.logsCollection)
-      .doc(newArchive.parentLogId)
-      .collection(FirebaseConstants.archivesCollection)
-      .doc(newArchive.archiveId)
-      .update(ArchiveModel.toJsonWithoutImages(newArchive));
-  }
-
   Future<void> updateLog({required LogModel oldLog, required LogModel newLog}) async {
     if (newLog != oldLog) {
-      print("LOGS DIFFERENT");
       await setLog(logModel: newLog);
     }
   }

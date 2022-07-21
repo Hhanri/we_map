@@ -64,7 +64,7 @@ class LogFormPage extends StatelessWidget {
                     ),
                     Expanded(
                       child: ArchivesListViewWidget(
-                        isEditing: true,
+                        isOwner: true,
                         stream: context.read<LogFormCubit>().archivesStreamController.stream,
                       )
                     ),

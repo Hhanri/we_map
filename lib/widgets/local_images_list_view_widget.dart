@@ -1,46 +1,37 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:we_map/blocs/archive_form_cubit/archive_form_cubit.dart';
+import 'package:we_map/blocs/archive_form_bloc/archive_form_bloc.dart';
 import 'package:we_map/constants/theme.dart';
-import 'package:we_map/models/image_model.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/widgets/image_widget.dart';
-import 'package:we_map/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
-class ImagesListViewWidget extends StatelessWidget {
-  final Stream<List<ImageModel>> stream;
-  final bool isEditing;
-  const ImagesListViewWidget({Key? key, required this.stream, required this.isEditing}) : super(key: key);
+class LocalImagesListViewWidget extends StatelessWidget {
+  final List<XFile> images;
+  const LocalImagesListViewWidget({Key? key, required this.images}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<ImageModel>>(
-      stream: stream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final List<ImageModel> images = snapshot.data!;
-          final int itemCount = isEditing ? images.length + 1 : images.length;
-          return ListView.builder(
-            padding: const EdgeInsets.all(8),
-            scrollDirection: Axis.horizontal,
-            itemExtent: MediaQuery.of(context).size.width*0.5,
-            itemCount: itemCount,
-            //shrinkWrap: true,
-            itemBuilder: (context, index) {
-              if (isEditing == true && index == itemCount - 1) {
-                return const AddPhotoButtonWidget();
-              } else {
-                return ImageWidget(
-                  image: images[index],
-                  isEditing: isEditing,
-                );
-              }
-            },
-          );
-        }
-        return const LoadingWidget();
-      },
+    final int itemCount = images.length + 1;
+    final double size = MediaQuery.of(context).size.width*0.5;
+    return SizedBox(
+      height: size,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(8),
+        scrollDirection: Axis.horizontal,
+        itemExtent: size,
+        itemCount: itemCount,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          if (index == itemCount - 1) {
+            return const AddPhotoButtonWidget();
+          } else {
+            return LocalImageWidget(
+              imagePath: images[index].path,
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -95,7 +86,7 @@ class AddPhotoButtonWidget extends StatelessWidget {
           child: TextButton.icon(
             onPressed: () {
               AppRouter.pop();
-              context.read<ArchiveFormCubit>().pickImage(imageSource: imageSource);
+              context.read<ArchiveFormBloc>().add(AddPhotoEvent(imageSource: imageSource));
             },
             icon: Icon(icon),
             label: Text(label)
