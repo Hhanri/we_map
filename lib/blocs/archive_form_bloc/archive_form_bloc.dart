@@ -74,9 +74,8 @@ class ArchiveFormBloc extends Bloc<ArchiveFormEvent, ArchiveFormState> {
         shouldPop: true,
         function: () async => await firebaseService.setArchive(
           archive: ArchiveModel(
-            archiveUid: authService.getUserId,
+            uid: authService.getUserId,
             archiveId: UniqueKey().toString() ,
-            parentLogUid: parentLog.logUid,
             parentLogId: parentLog.logId,
             date: DateTime.now(),
             waterLevel: double.tryParse(waterLevelController.text) ?? 0.0,

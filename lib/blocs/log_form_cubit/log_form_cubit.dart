@@ -42,7 +42,7 @@ class LogFormCubit extends Cubit<LogFormState> {
     final String newStreetName = streetNameController.text;
 
     final LogModel newLog = LogModel(
-      logUid: initialLog.logUid,
+      uid: initialLog.uid,
       logId: newLogId,
       geoPoint: newGeoFirePoint,
       streetName: newStreetName

@@ -99,7 +99,7 @@ class FirebaseFirestoreService {
         uid: authInstance.currentUser!.uid,
         parentLogId: parentArchive.parentLogId,
         parentArchiveId: parentArchive.archiveId,
-        path: "logs/${parentArchive.parentLogUid}/${parentArchive.parentLogId}/archives/${parentArchive.archiveUid}/${parentArchive.archiveId}/images/${image.name}"
+        path: "logs/${parentArchive.uid}/${parentArchive.parentLogId}/archives/${parentArchive.archiveId}/images/${image.name}"
     );
     final Reference ref = storageInstance.ref(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
