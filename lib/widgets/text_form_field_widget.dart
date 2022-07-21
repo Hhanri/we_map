@@ -18,12 +18,9 @@ class TextFormFieldWidget extends StatelessWidget {
           labelStyle: Theme.of(context).textTheme.bodyText2,
           filled: true,
           fillColor: AppTheme.secondaryColor,
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(width: 1, color: AppTheme.primary2Color),
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(width: 1, color: AppTheme.primary2Color),
-          ),
+          border: _getBorders(width: 0.2),
+          enabledBorder: _getBorders(width: 0.2),
+          focusedBorder: _getBorders(width: 0.8)
         ),
         obscureText: (parameters is PasswordParameters || parameters is PasswordConfirmationParameters) ? true : false,
         keyboardType: parameters.keyboardType,
@@ -31,6 +28,12 @@ class TextFormFieldWidget extends StatelessWidget {
         validator: parameters.validator,
         maxLines: parameters.maxLines,
       ),
+    );
+  }
+
+  OutlineInputBorder _getBorders({required double width}) {
+    return OutlineInputBorder(
+      borderSide: BorderSide(width: width, color: AppTheme.primary2Color),
     );
   }
 }
