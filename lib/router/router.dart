@@ -22,8 +22,8 @@ class AppRouter {
       case signUpRoute: return returnPage(const SignUpPage());
       case emailVerificationRoute: return returnPage(const EmailVerificationPage());
       case homeRoute: return returnPage(const HomePage());
-      case topicViewRoute: return returnPage(TopicViewPage(topic: settings.arguments as TopicModel));
-      case topicFormRoute: return returnPage(NewTopicFormPage(initialTopic: settings.arguments as TopicModel));
+      case topicViewRoute: return returnPage(TopicViewPage(topic: settings.arguments as TopicModel, isOwner: false,));
+      case topicFormRoute: return returnPage(TopicFormPage(initialTopic: settings.arguments as TopicModel));
       case postViewRoute: return returnPage(PostViewPage(post: settings.arguments as PostModel));
       case postFormRoute: return returnPage(PostFormPage(parentTopic: settings.arguments as TopicModel));
       case networkImageViewerRoute: return returnPage(NetworkImageViewerPage(url: settings.arguments as String));

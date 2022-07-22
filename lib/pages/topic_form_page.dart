@@ -3,6 +3,7 @@ import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';
 import 'package:we_map/models/topic_model.dart';
+import 'package:we_map/pages/topic_view_page.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
@@ -14,9 +15,9 @@ import 'package:we_map/widgets/text_form_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NewTopicFormPage extends StatelessWidget {
+class TopicFormPage extends StatelessWidget {
   final TopicModel initialTopic;
-  const NewTopicFormPage({Key? key, required this.initialTopic}) : super(key: key);
+  const TopicFormPage({Key? key, required this.initialTopic}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,56 +42,13 @@ class NewTopicFormPage extends StatelessWidget {
         builder: (context, state) {
           final TopicModel topic = context.watch<TopicFormBloc>().initialTopic;
           if (state is TopicFormViewState) {
-            return TopicViewOwnerView(topic: topic);
+            return TopicViewPage(topic: topic, isOwner: true);
           }
           if (state is TopicFormEditState) {
             return TopicFormEditingView(currentState: state);
           }
           return const LoadingWidget();
         },
-      ),
-    );
-  }
-}
-
-
-class TopicViewOwnerView extends StatelessWidget {
-  final TopicModel topic;
-  const TopicViewOwnerView({Key? key, required this.topic}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TopicFormOwnerAppBarWidget(
-        onEdit: () => context.read<TopicFormBloc>().add(EmitEditingState(isLoading: false)),
-        onDelete: () => context.read<TopicFormBloc>().add(DeleteTopicEvent()),
-      ),
-      body: Padding(
-        padding: DisplayConstants.scaffoldPadding,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ListTile(
-                title: const Text(AppStringsConstants.title),
-                trailing: Text(topic.topicTitle),
-              ),
-              ListTile(
-                title: const Text(AppStringsConstants.description),
-                trailing: Text(topic.topicDescription),
-              ),
-              TextButtonWidget(
-                onPressed: () {
-                  context.read<TopicFormBloc>().add(AddPostEvent());
-                },
-                text: 'Add'
-              ),
-              PostsListViewWidget(
-                isOwner: true,
-                stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getPostsStream(topic: topic)
-              )
-            ],
-          ),
-        ),
       ),
     );
   }
