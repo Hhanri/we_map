@@ -20,7 +20,7 @@ class NetworkImageViewerPage extends StatelessWidget {
         child: InteractiveViewer(
           child: Center(
             child: CachedNetworkImage(
-                imageUrl: url,
+              imageUrl: url,
               fit: BoxFit.cover,
             )
           ),
@@ -46,10 +46,10 @@ class LocalImageViewerPage extends StatelessWidget {
         tag: path,
         child: InteractiveViewer(
           child: Center(
-              child: Image.file(
-                File(path),
-                fit: BoxFit.cover,
-              )
+            child: Image.file(
+              File(path),
+              fit: BoxFit.cover,
+            )
           ),
         ),
       )

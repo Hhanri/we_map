@@ -1,4 +1,4 @@
-import 'package:we_map/blocs/topic_form_cubit/topic_form_cubit.dart';
+import 'package:we_map/blocs/topic_form_bloc/topic_form_bloc.dart';
 import 'package:we_map/models/post_model.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/utils/extensions.dart';
@@ -49,7 +49,7 @@ class DeletePostButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        context.read<TopicFormCubit>().deletePost(post);
+        context.read<TopicFormBloc>().add(DeletePostEvent(post: post));
       },
       icon: const Icon(Icons.delete),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/blocs/auth_bloc/auth_bloc.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 
 class DefaultAppBarWidget extends StatelessWidget with PreferredSizeWidget {
@@ -29,16 +30,15 @@ class DefaultAppBarWidget extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class FormAppBarWidget extends StatelessWidget with PreferredSizeWidget {
+class PostFormAppBarWidget extends StatelessWidget with PreferredSizeWidget {
   final VoidCallback onValidate;
   final VoidCallback onDelete;
-  final String text;
-  const FormAppBarWidget({Key? key, required this.onValidate, required this.onDelete, required this.text}) : super(key: key);
+  const PostFormAppBarWidget({Key? key, required this.onValidate, required this.onDelete}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultAppBarWidget(
-      title: text,
+      title: AppStringsConstants.postTitle,
       actions: [
         IconButton(
           onPressed: onDelete,
@@ -47,6 +47,56 @@ class FormAppBarWidget extends StatelessWidget with PreferredSizeWidget {
         IconButton(
           onPressed: onValidate,
           icon: const Icon(Icons.check)
+        ),
+      ],
+    );
+  }
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class TopicFormEditingAppBarWidget extends StatelessWidget with PreferredSizeWidget {
+  final VoidCallback onValidate;
+  final VoidCallback onCancel;
+  const TopicFormEditingAppBarWidget({Key? key, required this.onValidate, required this.onCancel}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultAppBarWidget(
+      title: AppStringsConstants.topicTitle,
+      actions: [
+        IconButton(
+          onPressed: onCancel,
+          icon: const Icon(Icons.close),
+        ),
+        IconButton(
+          onPressed: onValidate,
+          icon: const Icon(Icons.check)
+        ),
+      ],
+    );
+  }
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class TopicFormOwnerAppBarWidget extends StatelessWidget with PreferredSizeWidget {
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  const TopicFormOwnerAppBarWidget({Key? key, required this.onEdit, required this.onDelete}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultAppBarWidget(
+      title: AppStringsConstants.topicTitle,
+      actions: [
+        IconButton(
+          onPressed: onDelete,
+          icon: const Icon(Icons.delete),
+        ),
+        IconButton(
+          onPressed: onEdit,
+          icon: const Icon(Icons.edit),
         ),
       ],
     );

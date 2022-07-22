@@ -38,8 +38,7 @@ class PostFormPage extends StatelessWidget {
         },
         builder: (context, state) {
           return Scaffold(
-            appBar: FormAppBarWidget(
-              text: AppStringsConstants.postTitle,
+            appBar: PostFormAppBarWidget(
               onDelete: () {
                 context.read<PostFormBloc>().add(DeletePostEvent());
               },

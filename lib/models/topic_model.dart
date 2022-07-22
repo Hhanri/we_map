@@ -63,12 +63,12 @@ class TopicModel extends Equatable {
       position: topic.geoPoint.latLngFromGeoFire(),
       infoWindow: InfoWindow(title: topic.topicTitle),
       onTap: () {
-        AppRouter.pushNamed(AppRouter.topicFormRoute, arguments: topic);
-        /*if (uid !=  topic.uid) {
+        //AppRouter.pushNamed(AppRouter.topicFormRoute, arguments: topic);
+        if (uid !=  topic.uid) {
           AppRouter.pushNamed(AppRouter.topicViewRoute, arguments: topic);
         } else {
           AppRouter.pushNamed(AppRouter.topicFormRoute, arguments: topic);
-        }*/
+        }
       }
     );
   }
