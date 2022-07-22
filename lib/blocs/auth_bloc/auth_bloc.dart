@@ -11,23 +11,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   late StreamSubscription<bool> subscription;
   AuthBloc({required this.authService}) : super(const AuthInitial()) {
 
-
-    void listenToProfile() {
-      subscription = authService.isProfileCreated().listen((exists) {
-        if (exists) {
-          add(EmitSignedInEvent());
-        } else {
-          add(EmitProfileNotExistsEvent());
-        }
-      });
-    }
-
     on<AuthInitializeEvent>((event, emit) async {
       authService.getUserStateStream().listen((event) {
         event?.reload();
         if (event != null) {
           if (event.emailVerified) {
-            listenToProfile();
+            add(EmitSignedInEvent());
           } else {
             add(EmitEmailNotVerifiedEvent());
           }
