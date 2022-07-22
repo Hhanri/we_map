@@ -8,14 +8,26 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FirebaseAuthService authService;
+  late StreamSubscription<bool> subscription;
   AuthBloc({required this.authService}) : super(const AuthInitial()) {
+
+
+    void listenToProfile() {
+      subscription = authService.isProfileCreated().listen((exists) {
+        if (exists) {
+          add(EmitSignedInEvent());
+        } else {
+          add(EmitProfileNotExistsEvent());
+        }
+      });
+    }
 
     on<AuthInitializeEvent>((event, emit) async {
       authService.getUserStateStream().listen((event) {
         event?.reload();
         if (event != null) {
           if (event.emailVerified) {
-            add(EmitSignedInEvent());
+            listenToProfile();
           } else {
             add(EmitEmailNotVerifiedEvent());
           }
@@ -24,6 +36,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       });
     });
+
+
 
     on<EmitBannedEvent>((event, emit) {
       emit(const AuthBannedState());
@@ -40,5 +54,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<EmitEmailNotVerifiedEvent>((event, emit) {
       emit(const EmailNotVerifiedState());
     });
+
+    on<EmitProfileNotExistsEvent>((event, emit) {
+      emit(const ProfileNotExistsState());
+    });
+  }
+  @override
+  Future<void> close() {
+    subscription.cancel();
+    return super.close();
   }
 }

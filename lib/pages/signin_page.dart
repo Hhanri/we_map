@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/blocs/sign_in_cubit/sign_in_cubit.dart';
-import 'package:we_map/blocs/sign_in_cubit/sign_in_state.dart';
 import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/dialogs/error_dialog.dart';

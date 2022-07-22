@@ -1,11 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:we_map/blocs/sign_in_cubit/sign_in_state.dart';
 import 'package:we_map/router/router.dart';
-
 import 'package:we_map/services/firebase_auth_service.dart';
 
+part 'sign_in_state.dart';
 
 class SignInCubit extends Cubit<SignInState> {
   final FirebaseAuthService authService;

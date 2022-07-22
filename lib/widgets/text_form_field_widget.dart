@@ -93,13 +93,15 @@ class TitleParameters extends TextFormParameters{
     controller: controller,
     label: AppStringsConstants.title,
     maxLines: 1,
-    validator: (value) => null,
+    validator: (value) {
+      if (value!.isEmpty) return AppStringsConstants.emptyField;
+      return null;
+    },
     keyboardType: TextInputType.text,
     inputFormatters: [
       FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
       FilteringTextInputFormatter.singleLineFormatter,
     ]
-
   );
 }
 
@@ -110,7 +112,10 @@ class DescriptionParameters extends TextFormParameters {
     controller: controller,
     label: AppStringsConstants.description,
     maxLines: 13,
-    validator: (value) => null,
+    validator: (value) {
+      if (value!.isEmpty) return AppStringsConstants.emptyField;
+      return null;
+    },
     keyboardType: TextInputType.multiline,
     inputFormatters: [
       FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
@@ -171,5 +176,25 @@ class PasswordConfirmationParameters extends TextFormParameters {
     inputFormatters: [
       FilteringTextInputFormatter.singleLineFormatter,
     ]
+  );
+}
+
+class UsernameParameters extends TextFormParameters{
+  UsernameParameters({
+    required TextEditingController controller
+  }) : super(
+      controller: controller,
+      label: AppStringsConstants.username,
+      maxLines: 1,
+      validator: (value) {
+        if (value!.isEmpty) return AppStringsConstants.emptyField;
+        if (value.length > 20) return AppStringsConstants.tooLongUsername;
+        return null;
+      },
+      keyboardType: TextInputType.text,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+        FilteringTextInputFormatter.singleLineFormatter,
+      ]
   );
 }

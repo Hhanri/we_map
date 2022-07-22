@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:we_map/constants/theme.dart';
+import 'package:we_map/widgets/linear_gradient_mask_widget.dart';
 
 class TextButtonWidget extends StatelessWidget {
   final String text;
@@ -10,8 +10,7 @@ class TextButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      child: ShaderMask(
-        shaderCallback: (bounds) => AppTheme.linearGradient.createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+      child: LinearGradientMaskWidget(
         child: Text(
           text,
           style: Theme.of(context).textTheme.button,

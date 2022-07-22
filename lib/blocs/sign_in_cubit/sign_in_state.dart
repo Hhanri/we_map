@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'sign_in_cubit.dart';
+
 
 @immutable
 abstract class SignInState extends Equatable {

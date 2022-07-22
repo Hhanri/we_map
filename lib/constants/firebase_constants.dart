@@ -25,5 +25,9 @@ class FirebaseConstants {
   static const String url = 'url';
     //users
   static const String uid = 'uid';
+  static const String email = 'email';
   static const String username = 'username';
+  static const String likedPosts = 'likedPosts';
+  static const String likedComments = 'likedComments';
+  static const String likedReplies = 'likedReplies';
 }

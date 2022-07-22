@@ -1,6 +1,7 @@
 import 'package:flutter/scheduler.dart';
 import 'package:we_map/models/post_model.dart';
 import 'package:we_map/models/topic_model.dart';
+import 'package:we_map/pages/create_user_profile_page.dart';
 import 'package:we_map/pages/post_view_page.dart';
 import 'package:we_map/pages/default_page.dart';
 import 'package:we_map/pages/email_verification_page.dart';
@@ -20,6 +21,7 @@ class AppRouter {
       case defaultRoute: return returnPage(const DefaultPage());
       case signInRoute: return returnPage(const SignInPage());
       case signUpRoute: return returnPage(const SignUpPage());
+      case profileNotExists: return returnPage(const CreateUserProfilePage());
       case emailVerificationRoute: return returnPage(const EmailVerificationPage());
       case homeRoute: return returnPage(const HomePage());
       case topicViewRoute: return returnPage(TopicViewPage(topic: settings.arguments as TopicModel, isOwner: false,));
@@ -35,6 +37,7 @@ class AppRouter {
   static const String defaultRoute = '/';
   static const String signInRoute = '/signIn';
   static const String signUpRoute = '/signUp';
+  static const String profileNotExists = 'noProfile';
   static const String isBannedRoute = '/isBanned';
   static const String emailVerificationRoute = '/emailVerification';
   static const String homeRoute = '/home';

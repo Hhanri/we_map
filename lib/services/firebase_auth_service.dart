@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/firebase_constants.dart';
 
 class FirebaseAuthService {
@@ -27,19 +28,28 @@ class FirebaseAuthService {
     await authInstance.currentUser!.sendEmailVerification();
   }
 
-  Future<bool> get isProfileCreated async {
-    final DocumentSnapshot<Map<String, dynamic>> doc = await firestoreInstance
-        .collection(FirebaseConstants.usersCollection)
-        .doc(authInstance.currentUser!.uid)
-        .get();
-    return doc.exists;
+  Stream<bool> isProfileCreated() {
+    return firestoreInstance
+      .collection(FirebaseConstants.usersCollection)
+      .doc(authInstance.currentUser!.uid)
+      .snapshots()
+      .map((event) => event.exists);
   }
 
-  Future<void> createProfile({required String username, required}) async{
-   return await firestoreInstance
-    .collection(FirebaseConstants.usersCollection)
-    .doc(authInstance.currentUser!.uid)
-    .set({FirebaseConstants.username: username});
+  Future<void> createProfile({required String username}) async{
+    if (username.isEmpty) throw FirebaseAuthException(code: '1', message: AppStringsConstants.emptyField);
+    if (username.length > 20) throw FirebaseAuthException(code: '0', message: AppStringsConstants.tooLongUsername);
+    return await firestoreInstance
+      .collection(FirebaseConstants.usersCollection)
+      .doc(authInstance.currentUser!.uid)
+      .set({
+        FirebaseConstants.username: username,
+        FirebaseConstants.uid: authInstance.currentUser!.uid,
+        FirebaseConstants.email: authInstance.currentUser!.email,
+        FirebaseConstants.likedPosts: [],
+        FirebaseConstants.likedComments: [],
+        FirebaseConstants.likedReplies: []
+      });
 }
 
   Future<void> signOut() async {
