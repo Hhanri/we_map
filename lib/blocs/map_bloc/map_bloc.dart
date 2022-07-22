@@ -58,7 +58,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<MainInitializeEvent>((event, emit) async {
       final target = await LocationService.getLocation();
       final camera = CameraPosition(target: target.latLngFromPosition(), zoom: 12);
-      tempCenter =camera.target;
+      tempCenter = camera.target;
       tempRadius = 9185.5;
       add(CameraStopEvent());
       emit(MainInitializedState(camera: camera, isLoading: false));

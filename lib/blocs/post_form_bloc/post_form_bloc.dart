@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/dialogs/validate_dialog.dart';
 import 'package:we_map/models/post_model.dart';
@@ -27,7 +28,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
   final TextEditingController postDescriptionController = TextEditingController();
 
   PostFormBloc({required this.parentTopic, required this.context, required this.firebaseService, required this.authService}) : super(const PostFormInitial(isLoading: false, images: [])) {
-
+    const Uuid uuid = Uuid();
     final ImagePicker picker = ImagePicker();
     List<XFile> images = [];
 
@@ -76,7 +77,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
         function: () async => await firebaseService.setPost(
           post: PostModel(
             uid: authService.getUserId,
-            postId: UniqueKey().toString() ,
+            postId: uuid.v4() ,
             parentTopicId: parentTopic.topicId,
             date: DateTime.now(),
             postTitle: postTitleController.text,
