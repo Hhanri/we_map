@@ -16,14 +16,10 @@ class AuthSignedOutState extends AuthState {
   const AuthSignedOutState();
 }
 
-class AuthBannedState extends AuthState {
-  const AuthBannedState();
-}
-
 class EmailNotVerifiedState extends AuthState {
   const EmailNotVerifiedState();
 }
 
-class ProfileNotExistsState extends AuthState {
-  const ProfileNotExistsState();
+class AuthSigningUpState extends AuthState {
+  const AuthSigningUpState();
 }

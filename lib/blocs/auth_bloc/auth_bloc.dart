@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
 
@@ -8,12 +9,11 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FirebaseAuthService authService;
-  late StreamSubscription<bool> subscription;
+  late StreamSubscription<User?> subscription;
   AuthBloc({required this.authService}) : super(const AuthInitial()) {
 
     on<AuthInitializeEvent>((event, emit) async {
-      authService.getUserStateStream().listen((event) {
-        event?.reload();
+      subscription = authService.getUserStateStream().listen((event) {
         if (event != null) {
           if (event.emailVerified) {
             add(EmitSignedInEvent());
@@ -26,26 +26,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       });
     });
 
-
-
-    on<EmitBannedEvent>((event, emit) {
-      emit(const AuthBannedState());
-    });
-
-    on<EmitSignedInEvent>((event, emit) {
-      emit(const AuthSignedInState());
+    on<EmitSignedInEvent>((event, emit) async {
+      await authService.authInstance.currentUser!.getIdToken(true);
+      if (state is !AuthSignedInState) {
+        emit(const AuthSignedInState());
+      }
     });
 
     on<EmitSignedOutEvent>((event, emit) {
-      emit(const AuthSignedOutState());
+      if (state is !AuthSignedOutState) {
+        emit(const AuthSignedOutState());
+      }
     });
 
     on<EmitEmailNotVerifiedEvent>((event, emit) {
-      emit(const EmailNotVerifiedState());
+      if (state is !EmailNotVerifiedState) {
+        emit(const EmailNotVerifiedState());
+      }
     });
 
-    on<EmitProfileNotExistsEvent>((event, emit) {
-      emit(const ProfileNotExistsState());
+    on<EmitSigningUpEvent>((event, emit) {
+      if (state is !AuthSigningUpState) {
+        emit(const AuthSigningUpState());
+      }
     });
   }
   @override

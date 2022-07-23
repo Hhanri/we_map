@@ -31,27 +31,31 @@ class TopicViewPage extends StatelessWidget {
       body: Padding(
         padding: DisplayConstants.scaffoldPadding,
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ListTile(
-                title: const Text(AppStringsConstants.title),
-                trailing: Text(topic.topicTitle),
-              ),
-              ListTile(
-                title: const Text(AppStringsConstants.description),
-                trailing: FittedBox(child: Text(topic.topicDescription)),
-              ),
-              if (isOwner) TextButtonWidget(
-                onPressed: () {
-                  context.read<TopicFormBloc>().add(AddPostEvent());
-                },
-                text: AppStringsConstants.add
-              ),
-              PostsListViewWidget(
-                isOwner: isOwner,
-                stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getPostsStream(topic: topic)
-              )
-            ],
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                ListTile(
+                  title: const Text(AppStringsConstants.title),
+                  trailing: Text(topic.topicTitle),
+                ),
+                ListTile(
+                  title: const Text(AppStringsConstants.description),
+                  trailing: Text(topic.topicDescription),
+                ),
+                if (isOwner) TextButtonWidget(
+                  onPressed: () {
+                    context.read<TopicFormBloc>().add(AddPostEvent());
+                  },
+                  text: AppStringsConstants.add
+                ),
+                PostsListViewWidget(
+                  isOwner: isOwner,
+                  stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getPostsStream(topic: topic)
+                )
+              ],
+            ),
           ),
         ),
       ),

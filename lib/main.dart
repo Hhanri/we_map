@@ -31,8 +31,7 @@ class MyApp extends StatelessWidget {
         create: (context) => AuthBloc(authService: RepositoryProvider.of<FirebaseAuthService>(context))..add(AuthInitializeEvent()),
         child: MaterialApp(
           builder: (context, child) {
-            return MediaQuery(data: MediaQuery.of(context).copyWith(
-                alwaysUse24HourFormat: true), child: child!);
+            return MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child!);
           },
           title: 'Fire Hydrant Mapper',
           theme: AppTheme.theme,

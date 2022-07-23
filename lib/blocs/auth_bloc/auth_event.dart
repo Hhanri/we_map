@@ -15,3 +15,5 @@ class EmitBannedEvent extends AuthEvent {}
 class EmitEmailNotVerifiedEvent extends AuthEvent {}
 
 class EmitProfileNotExistsEvent extends AuthEvent {}
+
+class EmitSigningUpEvent extends AuthEvent {}

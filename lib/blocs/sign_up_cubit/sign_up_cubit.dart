@@ -10,6 +10,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   final FirebaseAuthService authService;
   final BuildContext context;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordConfirmationController = TextEditingController();
@@ -17,7 +18,7 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   void signUp() {
     if (formKey.currentState!.validate()) {
-      tryCatch(() async => await authService.signUp(email: emailController.text, password: passwordController.text));
+      tryCatch(() async => await authService.signUp(email: emailController.text, password: passwordController.text, username: usernameController.text));
     }
   }
 
@@ -29,6 +30,8 @@ class SignUpCubit extends Cubit<SignUpState> {
       emit(notLoadingState);
     } on FirebaseAuthException catch (error) {
       emit(SignUpInitial(isLoading: false, errorMessage: error.message));
+    } on FirebaseException catch (error) {
+      emit(SignUpInitial(isLoading: false, errorMessage: error.message));
     }
   }
 
@@ -37,6 +40,7 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   @override
   Future<void> close() {
+    usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     passwordConfirmationController.dispose();

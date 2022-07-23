@@ -19,8 +19,11 @@ class FirebaseAuthService {
     await authInstance.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future<void> signUp({required String email, required String password}) async {
+  Future<void> signUp({required String email, required String password, required String username}) async {
+    if (username.isEmpty) throw FirebaseAuthException(code: '1', message: AppStringsConstants.emptyField);
+    if (username.length > 20) throw FirebaseAuthException(code: '0', message: AppStringsConstants.tooLongUsername);
     await authInstance.createUserWithEmailAndPassword(email: email, password: password);
+    await createProfile(username: username);
     await sendEmailVerification();
   }
 
@@ -37,8 +40,6 @@ class FirebaseAuthService {
   }
 
   Future<void> createProfile({required String username}) async{
-    if (username.isEmpty) throw FirebaseAuthException(code: '1', message: AppStringsConstants.emptyField);
-    if (username.length > 20) throw FirebaseAuthException(code: '0', message: AppStringsConstants.tooLongUsername);
     return await firestoreInstance
       .collection(FirebaseConstants.usersCollection)
       .doc(authInstance.currentUser!.uid)

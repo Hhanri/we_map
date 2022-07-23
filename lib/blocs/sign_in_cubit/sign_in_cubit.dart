@@ -19,7 +19,6 @@ class SignInCubit extends Cubit<SignInState> {
     if (formKey.currentState!.validate()) {
       await tryCatch(() async {
         await authService.signIn(email: emailController.text, password: passwordController.text);
-        AppRouter.pushNamedAndReplaceAll(AppRouter.homeRoute);
       });
     }
   }

@@ -50,6 +50,7 @@ class FirebaseFirestoreService {
       .set(PostModel.toJson(post));
 
     if (images.isNotEmpty) {
+      print("IMAGES NOT EMPTY");
       for (XFile file in images) {
         uploadImage(parentPost: post, image: file);
       }
@@ -163,7 +164,7 @@ class FirebaseFirestoreService {
   }
 
   double getDistance({required LatLng northeast, required LatLng southwest}) {
-    return GeoFirePoint.distanceBetween(to: southwest.coordinatesFromLatLng(), from: northeast.coordinatesFromLatLng())*1000;
+    return GeoFirePoint.kmDistanceBetween(to: southwest.coordinatesFromLatLng(), from: northeast.coordinatesFromLatLng())*1000;
   }
 
   Stream<List<PostModel>> getPostsStream({required TopicModel topic}) {
