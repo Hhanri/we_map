@@ -21,7 +21,7 @@ class DefaultRouterPage extends StatelessWidget {
 }
 
 List<Page> onGenerateDefaultPages(AuthState state, List<Page<dynamic>> pages) {
-  switch(state) {
+  switch (state) {
     case AuthSignedInState(): return [MapPage.route()];
     case AuthSignedOutState(): return [SignInPage.route()];
     case AuthSigningUpState(): return [SignUpPage.route()];

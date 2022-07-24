@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:we_map/constants/firebase_constants.dart';
+import 'package:we_map/models/coment_model.dart';
 import 'package:we_map/models/post_model.dart';
 import 'package:we_map/models/image_model.dart';
 import 'package:we_map/models/topic_model.dart';
@@ -138,15 +139,15 @@ class FirebaseFirestoreService {
     return downloadURL;
   }
 
-  Stream<List<TopicModel>> getTopicsStream() {
-    return firestoreInstance
+  Future<void> writeComment(CommentModel comment) async {
+    await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
-      .snapshots()
-      .map((event) {
-        return event.docs.map((doc) {
-          return TopicModel.fromJson(doc.data());
-        }).toList();
-      });
+      .doc(comment.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(comment.parentPostId)
+      .collection(FirebaseConstants.commentsCollection)
+      .doc(comment.commentId)
+      .set(CommentModel.toJson(comment));
   }
 
   //GeoFlutterFire uses radius as Km, Google Maps' radius is in meters
@@ -192,6 +193,21 @@ class FirebaseFirestoreService {
       .map((event) {
         return event.docs.map((doc) {
           return ImageModel.fromJson(doc.data());
+        }).toList();
+      });
+  }
+  
+  Stream<List<CommentModel>> getCommentsStream({required PostModel post}) {
+    return firestoreInstance
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(post.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(post.postId)
+      .collection(FirebaseConstants.commentsCollection)
+      .snapshots()
+      .map((event) {
+        return event.docs.map((doc) {
+          return CommentModel.fromJson(doc.data());
         }).toList();
       });
   }
