@@ -155,6 +155,44 @@ class FirebaseFirestoreService {
     return downloadURL;
   }
 
+  //optedInField and optedOutField are supposed to be FirebaseConstants.likedPosts or FirebaseConstants.dislikedPosts
+  Future<void> likeDislikePost({required PostModel post, required String optedInField, required String optedOutField}) async {
+    final List<String> securityCheck = [FirebaseConstants.dislikedPosts, FirebaseConstants.likedPosts];
+    if (optedInField == optedOutField) return;
+    if (!securityCheck.contains(optedInField) || !securityCheck.contains(optedOutField)) return;
+
+    final userRef = firestoreInstance
+        .collection(FirebaseConstants.usersCollection)
+        .doc(getUserId);
+
+    final postRef = firestoreInstance
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(post.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(post.postId);
+
+    final batch = firestoreInstance.batch();
+
+    final userData = await userRef.get();
+
+    final String subOptedInField = optedInField == FirebaseConstants.likedPosts ? FirebaseConstants.likes : FirebaseConstants.dislikes;
+    final String subOptedOutField = optedInField == FirebaseConstants.likedPosts ? FirebaseConstants.dislikes : FirebaseConstants.likes;
+
+    if ((userData[optedInField] as List<String>).contains(post.postId)) {
+      batch.set(userRef, {optedInField: FieldValue.arrayRemove([post.postId])});
+      batch.set(postRef, {subOptedInField: FieldValue.increment(-1)});
+    } else {
+      batch.set(userRef, {optedInField: FieldValue.arrayUnion([post.postId])});
+      batch.set(postRef, {subOptedInField: FieldValue.increment(1)});
+    }
+
+    if ((userData[subOptedOutField] as List<String>).contains(post.postId)) {
+      batch.set(userRef, {subOptedOutField: FieldValue.arrayUnion([post.postId])});
+      batch.set(postRef, {subOptedOutField: FieldValue.increment(1)});
+    }
+    await batch.commit();
+  }
+
   Future<void> setComment(CommentModel comment) async {
     await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
@@ -226,5 +264,15 @@ class FirebaseFirestoreService {
           return CommentModel.fromJson(doc.data());
         }).toList();
       });
+  }
+
+  Stream<bool> getPostLikesDislikesStream({required String postId, required String field}) {
+    return firestoreInstance
+      .collection(FirebaseConstants.usersCollection)
+      .doc(getUserId)
+      .snapshots()
+      .map((event) {
+        return (event.data()![field] as List<String>).contains(postId);
+    });
   }
 }

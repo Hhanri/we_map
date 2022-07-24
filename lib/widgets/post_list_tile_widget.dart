@@ -14,7 +14,8 @@ class PostListTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return ListTile(
-      title: Text(post.date.formatDate()),
+      title: Text(post.postTitle),
+      subtitle: Text(post.date.formatDate()),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
