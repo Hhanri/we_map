@@ -158,8 +158,8 @@ class FirebaseFirestoreService {
   //optedInField and optedOutField are supposed to be FirebaseConstants.likedPosts or FirebaseConstants.dislikedPosts
   Future<void> likeDislikePost({required PostModel post, required String optedInField, required String optedOutField}) async {
     final List<String> securityCheck = [FirebaseConstants.dislikedPosts, FirebaseConstants.likedPosts];
-    if (optedInField == optedOutField) return;
-    if (!securityCheck.contains(optedInField) || !securityCheck.contains(optedOutField)) return;
+    if (optedInField == optedOutField) throw('Error, optedInField and optedOutField cant be the same');
+    if (!securityCheck.contains(optedInField) || !securityCheck.contains(optedOutField)) throw("Error, optedInField and optedOutField has to be likedPosts or dislikedPosts");
 
     final userRef = firestoreInstance
         .collection(FirebaseConstants.usersCollection)

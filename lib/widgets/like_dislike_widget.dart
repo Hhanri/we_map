@@ -56,7 +56,7 @@ class PostLikeDislikeWidget extends StatelessWidget {
           value: post.dislikes,
           icon: Icons.keyboard_arrow_down_outlined,
           onPressed: () {
-            RepositoryProvider.of<FirebaseFirestoreService>(context).likeDislikePost(post: post, optedInField: FirebaseConstants.likedPosts, optedOutField: FirebaseConstants.dislikedPosts);
+            RepositoryProvider.of<FirebaseFirestoreService>(context).likeDislikePost(post: post, optedInField: FirebaseConstants.dislikedPosts, optedOutField: FirebaseConstants.likedPosts);
           },
           stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getPostLikesDislikesStream(postId: post.postId, field: FirebaseConstants.likedPosts),
         )
