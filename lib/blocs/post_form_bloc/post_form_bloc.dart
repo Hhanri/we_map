@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/dialogs/validate_dialog.dart';
-import 'package:we_map/models/post_model.dart';
 import 'package:we_map/models/topic_model.dart';
 import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_auth_service.dart';
@@ -28,7 +26,6 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
   final TextEditingController postDescriptionController = TextEditingController();
 
   PostFormBloc({required this.parentTopic, required this.context, required this.firebaseService, required this.authService}) : super(const PostFormInitial(isLoading: false, images: [])) {
-    const Uuid uuid = Uuid();
     final ImagePicker picker = ImagePicker();
     List<XFile> images = [];
 
@@ -75,14 +72,9 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
         elementName: AppStringsConstants.post,
         shouldPop: true,
         function: () async => await firebaseService.setPost(
-          post: PostModel(
-            uid: authService.getUserId,
-            postId: uuid.v4() ,
-            parentTopicId: parentTopic.topicId,
-            date: DateTime.now(),
-            postTitle: postTitleController.text,
-            postDescription: postDescriptionController.text
-          ),
+          parentTopicId: parentTopic.topicId,
+          postTitle: postTitleController.text,
+          postDescription: postDescriptionController.text,
           images: images
         ),
       );

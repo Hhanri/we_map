@@ -9,6 +9,8 @@ class PostModel extends Equatable {
   final DateTime date;
   final String postTitle;
   final String postDescription;
+  final int likes;
+  final int dislikes;
 
   const PostModel({
     required this.uid,
@@ -16,7 +18,9 @@ class PostModel extends Equatable {
     required this.parentTopicId,
     required this.date,
     required this.postTitle,
-    required this.postDescription
+    required this.postDescription,
+    required this.likes,
+    required this.dislikes
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -26,7 +30,9 @@ class PostModel extends Equatable {
       parentTopicId: json[FirebaseConstants.parentTopicId],
       date: (json[FirebaseConstants.date] as Timestamp).toDate(),
       postTitle: json[FirebaseConstants.postTitle],
-      postDescription: json[FirebaseConstants.postDescription]
+      postDescription: json[FirebaseConstants.postDescription],
+      likes: json[FirebaseConstants.likes],
+      dislikes: json[FirebaseConstants.dislikes]
     );
   }
 
@@ -38,6 +44,8 @@ class PostModel extends Equatable {
       FirebaseConstants.date: model.date,
       FirebaseConstants.postTitle: model.postTitle,
       FirebaseConstants.postDescription: model.postDescription,
+      FirebaseConstants.likes: FieldValue.increment(0),
+      FirebaseConstants.dislikes: FieldValue.increment(0)
     };
   }
 

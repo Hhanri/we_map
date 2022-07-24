@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:we_map/constants/firebase_constants.dart';
 
 class CommentModel {
@@ -21,16 +22,16 @@ class CommentModel {
     required this.replies
   });
 
-  static Map<String, dynamic> toJson(CommentModel comment) {
+  static Map<String, dynamic> toJson(CommentModel model) {
     return {
-      FirebaseConstants.commentId: comment.commentId,
-      FirebaseConstants.uid: comment.uid,
-      FirebaseConstants.parentPostId: comment.parentPostId,
-      FirebaseConstants.parentTopicId: comment.parentTopicId,
-      FirebaseConstants.comment: comment.comment,
-      FirebaseConstants.replies: comment.replies,
-      FirebaseConstants.likes: comment.likes,
-      FirebaseConstants.dislikes: comment.dislikes
+      FirebaseConstants.commentId: model.commentId,
+      FirebaseConstants.uid: model.uid,
+      FirebaseConstants.parentPostId: model.parentPostId,
+      FirebaseConstants.parentTopicId: model.parentTopicId,
+      FirebaseConstants.comment: model.comment,
+      FirebaseConstants.replies: model.replies,
+      FirebaseConstants.likes: FieldValue.increment(0),
+      FirebaseConstants.dislikes: FieldValue.increment(0)
     };
   }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'package:we_map/constants/firebase_constants.dart';
 import 'package:we_map/models/coment_model.dart';
 import 'package:we_map/models/post_model.dart';
@@ -16,6 +17,8 @@ class FirebaseFirestoreService {
   final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
   final FirebaseStorage storageInstance = FirebaseStorage.instance;
   final Geoflutterfire geo = Geoflutterfire();
+  final Uuid uuid = const Uuid();
+  String get getUserId => authInstance.currentUser!.uid;
 
   Future<void> setTopic({required TopicModel topicModel}) async {
     await firestoreInstance
@@ -42,7 +45,19 @@ class FirebaseFirestoreService {
       .delete();
   }
 
-  Future<void> setPost({required PostModel post, required List<XFile> images}) async {
+  Future<void> setPost({required String parentTopicId, required String postTitle, required String postDescription, required List<XFile> images}) async {
+
+    final PostModel post = PostModel(
+      uid: getUserId,
+      postId: uuid.v4(),
+      parentTopicId: parentTopicId,
+      date: DateTime.now(),
+      postTitle: postTitle,
+      postDescription: postDescription,
+      likes: 0,
+      dislikes: 0
+    );
+
     await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
       .doc(post.parentTopicId)
@@ -56,6 +71,7 @@ class FirebaseFirestoreService {
         uploadImage(parentPost: post, image: file);
       }
     }
+
   }
 
   Future<void> deletePost({required PostModel post}) async {
@@ -139,7 +155,7 @@ class FirebaseFirestoreService {
     return downloadURL;
   }
 
-  Future<void> writeComment(CommentModel comment) async {
+  Future<void> setComment(CommentModel comment) async {
     await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
       .doc(comment.parentTopicId)
