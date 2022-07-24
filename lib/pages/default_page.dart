@@ -21,12 +21,11 @@ class DefaultRouterPage extends StatelessWidget {
 }
 
 List<Page> onGenerateDefaultPages(AuthState state, List<Page<dynamic>> pages) {
-  LoadingScreen.instance().hide();
   switch(state) {
     case AuthSignedInState(): return [MapPage.route()];
     case AuthSignedOutState(): return [SignInPage.route()];
     case AuthSigningUpState(): return [SignUpPage.route()];
-    case EmailNotVerifiedState(): return [EmailVerificationPage.route()];
+    case EmailNotVerifiedState(): LoadingScreen.instance().hide(); return [EmailVerificationPage.route()];
     default: return [MapPage.route()];
   }
 }

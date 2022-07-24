@@ -48,6 +48,7 @@ class FirebaseAuthService {
         FirebaseConstants.uid: authInstance.currentUser!.uid,
         FirebaseConstants.email: authInstance.currentUser!.email,
         FirebaseConstants.likedPosts: [],
+        FirebaseConstants.dislikedPosts: [],
         FirebaseConstants.likedComments: [],
         FirebaseConstants.likedReplies: []
       });

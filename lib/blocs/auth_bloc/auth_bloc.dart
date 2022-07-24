@@ -15,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthInitializeEvent>((event, emit) async {
       subscription = authService.getUserStateStream().listen((event) {
         if (event != null) {
+          event.reload();
           if (event.emailVerified) {
             add(EmitSignedInEvent());
           } else {
@@ -27,8 +28,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<EmitSignedInEvent>((event, emit) async {
-      await authService.authInstance.currentUser!.getIdToken(true);
       if (state is !AuthSignedInState) {
+        await authService.authInstance.currentUser!.getIdToken();
         emit(const AuthSignedInState());
       }
     });

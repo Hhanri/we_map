@@ -8,7 +8,6 @@ import 'package:we_map/pages/topic_form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:we_map/pages/topic_view_page.dart';
 import 'package:we_map/pages/post_form_page.dart';
-import 'package:we_map/pages/signup_page.dart';
 import 'package:we_map/screens/loading/loading_screen.dart';
 
 class AppRouter {
