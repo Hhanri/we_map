@@ -4,6 +4,7 @@ import 'package:we_map/router/router.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:we_map/widgets/like_dislike_widget.dart';
 
 class PostListTileWidget extends StatelessWidget {
   final PostModel post;
@@ -15,10 +16,12 @@ class PostListTileWidget extends StatelessWidget {
 
     return ListTile(
       title: Text(post.postTitle),
-      subtitle: Text(post.date.formatDate()),
+      subtitle: Text(post.date.formatDate(),),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          PostLikeDislikeWidget(post: post),
           ViewPostButton(post: post,),
           if (isOwner) DeletePostButton(post: post)
         ],

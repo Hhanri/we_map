@@ -178,17 +178,17 @@ class FirebaseFirestoreService {
     final String subOptedInField = optedInField == FirebaseConstants.likedPosts ? FirebaseConstants.likes : FirebaseConstants.dislikes;
     final String subOptedOutField = optedInField == FirebaseConstants.likedPosts ? FirebaseConstants.dislikes : FirebaseConstants.likes;
 
-    if ((userData[optedInField] as List<String>).contains(post.postId)) {
-      batch.set(userRef, {optedInField: FieldValue.arrayRemove([post.postId])});
-      batch.set(postRef, {subOptedInField: FieldValue.increment(-1)});
+    if (List<String>.from(userData.data()![optedInField]).contains(post.postId)) {
+      batch.update(userRef, {optedInField: FieldValue.arrayRemove([post.postId])});
+      batch.update(postRef, {subOptedInField: FieldValue.increment(-1)});
     } else {
-      batch.set(userRef, {optedInField: FieldValue.arrayUnion([post.postId])});
-      batch.set(postRef, {subOptedInField: FieldValue.increment(1)});
+      batch.update(userRef, {optedInField: FieldValue.arrayUnion([post.postId])});
+      batch.update(postRef, {subOptedInField: FieldValue.increment(1)});
     }
 
-    if ((userData[subOptedOutField] as List<String>).contains(post.postId)) {
-      batch.set(userRef, {subOptedOutField: FieldValue.arrayUnion([post.postId])});
-      batch.set(postRef, {subOptedOutField: FieldValue.increment(1)});
+    if (List<String>.from(userData.data()![optedOutField]).contains(post.postId)) {
+      batch.update(userRef, {optedOutField: FieldValue.arrayRemove([post.postId])});
+      batch.update(postRef, {subOptedOutField: FieldValue.increment(-1)});
     }
     await batch.commit();
   }
@@ -236,6 +236,18 @@ class FirebaseFirestoreService {
       });
   }
 
+  Stream<PostModel> getSinglePostStream({required PostModel post}) {
+    return firestoreInstance
+        .collection(FirebaseConstants.topicsCollection)
+        .doc(post.parentTopicId)
+        .collection(FirebaseConstants.postsCollection)
+        .doc(post.postId)
+        .snapshots()
+        .map((event) {
+          return PostModel.fromJson(event.data()!);
+    });
+  }
+
   Stream<List<ImageModel>> getImagesStream({required PostModel post}) {
     return firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
@@ -272,7 +284,7 @@ class FirebaseFirestoreService {
       .doc(getUserId)
       .snapshots()
       .map((event) {
-        return (event.data()![field] as List<String>).contains(postId);
+        return (List<String>.from(event.data()![field])).contains(postId);
     });
   }
 }

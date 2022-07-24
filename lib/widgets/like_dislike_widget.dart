@@ -15,20 +15,22 @@ class IconValueWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<bool>(
-      stream: null,
+      stream: stream,
       builder: (context, isSelected) {
         return Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            isSelected.data!
+            isSelected.data ?? false
               ? GradientButtonWidget(
                   icon: icon,
-                  onPressed: isSelected.data! ? () {} : null
+                  onPressed: onPressed
                 )
               : WhiteIconButtonWidget(
                   icon: icon,
-                  onPressed: isSelected.data! ? () {} : null
+                  onPressed: onPressed
                 ),
-            Text(value.toString())
+            Text(value != 0 ? value.toString() : '')
           ],
         );
       }
@@ -43,6 +45,7 @@ class PostLikeDislikeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         IconValueWidget(
           value: post.likes,
@@ -58,7 +61,7 @@ class PostLikeDislikeWidget extends StatelessWidget {
           onPressed: () {
             RepositoryProvider.of<FirebaseFirestoreService>(context).likeDislikePost(post: post, optedInField: FirebaseConstants.dislikedPosts, optedOutField: FirebaseConstants.likedPosts);
           },
-          stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getPostLikesDislikesStream(postId: post.postId, field: FirebaseConstants.likedPosts),
+          stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getPostLikesDislikesStream(postId: post.postId, field: FirebaseConstants.dislikedPosts),
         )
       ],
     );

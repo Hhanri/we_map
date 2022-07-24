@@ -48,9 +48,15 @@ class AppTheme {
   );
 
   static const TextStyle placeholderTextStyle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.normal,
+    fontSize: 16,
+    fontWeight: FontWeight.w300,
     color: placeholderColor
+  );
+
+  static const TextStyle subtitleTextStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w300,
+      color: secondaryColor
   );
 
   static const TextTheme textTheme = TextTheme(
