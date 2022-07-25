@@ -278,13 +278,14 @@ class FirebaseFirestoreService {
       });
   }
 
-  Stream<bool> getPostLikesDislikesStream({required String postId, required String field}) {
+  Future<bool> getPostLikesDislikesFuture({required String postId, required String field}) {
     return firestoreInstance
       .collection(FirebaseConstants.usersCollection)
       .doc(getUserId)
-      .snapshots()
-      .map((event) {
-        return (List<String>.from(event.data()![field])).contains(postId);
-    });
+      .get()
+      .then((value) {
+        return (List<String>.from(value.data()![field])).contains(postId);
+      });
+
   }
 }
