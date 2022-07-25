@@ -123,3 +123,18 @@ class HomeAppBarWidget extends StatelessWidget with PreferredSizeWidget{
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+
+class CommentAppBarWidget extends StatelessWidget with PreferredSizeWidget{
+  final int number;
+  const CommentAppBarWidget({Key? key, required this.number}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultAppBarWidget(
+      automaticallyImplyLeading: true,
+      title: "$number comments"
+    );
+  }
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/constants/firebase_constants.dart';
 import 'package:we_map/models/post_model.dart';
+import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/icon_button_widget.dart';
 
@@ -62,7 +63,7 @@ class PostLikeDislikeWidget extends StatelessWidget {
             RepositoryProvider.of<FirebaseFirestoreService>(context).likeDislikePost(post: post, optedInField: FirebaseConstants.dislikedPosts, optedOutField: FirebaseConstants.likedPosts);
           },
           future: RepositoryProvider.of<FirebaseFirestoreService>(context).getPostLikesDislikesFuture(postId: post.postId, field: FirebaseConstants.dislikedPosts),
-        )
+        ),
       ],
     );
   }

@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/constants/app_strings_constants.dart';
 import 'package:we_map/constants/theme.dart';
 import 'package:we_map/models/post_model.dart';
+import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/utils/extensions.dart';
 import 'package:we_map/widgets/app_bar_widget.dart';
+import 'package:we_map/widgets/icon_button_widget.dart';
 import 'package:we_map/widgets/like_dislike_widget.dart';
 import 'package:we_map/widgets/network_images_list_view_widget.dart';
 
@@ -45,7 +47,19 @@ class PostViewPage extends StatelessWidget {
                         stream: RepositoryProvider.of<FirebaseFirestoreService>(context).getImagesStream(post: post),
                       ),
                     ),
-                    Expanded(child: PostLikeDislikeWidget(post: snapshot.data ?? post))
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        PostLikeDislikeWidget(post: snapshot.data ?? post),
+                        GradientButtonWidget(
+                          icon: Icons.mode_comment_outlined,
+                          onPressed: () {
+                            AppRouter.pushNamed(AppRouter.commentsRoute, arguments: post);
+                          }
+                        )
+                      ]
+                    )
                   ],
                 ),
               ),

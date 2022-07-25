@@ -193,7 +193,19 @@ class FirebaseFirestoreService {
     await batch.commit();
   }
 
-  Future<void> setComment(CommentModel comment) async {
+  Future<void> setComment({required String parentTopicId, required String parentPostId, required String commentContent,}) async {
+
+    final comment = CommentModel(
+      commentId: uuid.v4(),
+      parentPostId: parentPostId,
+      parentTopicId: parentTopicId,
+      uid: getUserId,
+      comment: commentContent,
+      likes: 0,
+      dislikes: 0,
+      replies: 0
+    );
+
     await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
       .doc(comment.parentTopicId)

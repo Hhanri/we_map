@@ -42,9 +42,9 @@ class CommentModel {
       parentTopicId: json[FirebaseConstants.parentTopicId],
       uid: json[FirebaseConstants.uid],
       comment: json[FirebaseConstants.comment],
-      likes: int.tryParse(json[FirebaseConstants.likes]) ?? 0,
-      dislikes: int.tryParse(json[FirebaseConstants.dislikes]) ?? 0,
-      replies: int.tryParse(json[FirebaseConstants.replies]) ?? 0
+      likes: json[FirebaseConstants.likes],
+      dislikes: json[FirebaseConstants.dislikes],
+      replies: json[FirebaseConstants.replies]
     );
   }
 }

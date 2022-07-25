@@ -36,6 +36,7 @@ class MapWidget extends StatelessWidget {
                   markers: markers,
                   mapType: MapType.normal,
                   myLocationButtonEnabled: true,
+                  tiltGesturesEnabled: false,
                   myLocationEnabled: true,
                   zoomControlsEnabled: false,
                   onMapCreated: (GoogleMapController controller) {

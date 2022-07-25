@@ -1,6 +1,7 @@
 import 'package:flutter/scheduler.dart';
 import 'package:we_map/models/post_model.dart';
 import 'package:we_map/models/topic_model.dart';
+import 'package:we_map/pages/comments_page.dart';
 import 'package:we_map/pages/post_view_page.dart';
 import 'package:we_map/pages/default_page.dart';
 import 'package:we_map/pages/image_viewer_page.dart';
@@ -18,6 +19,7 @@ class AppRouter {
       case topicFormRoute: return returnPage(TopicFormPage(initialTopic: settings.arguments as TopicModel));
       case postViewRoute: return returnPage(PostViewPage(post: settings.arguments as PostModel));
       case postFormRoute: return returnPage(PostFormPage(parentTopic: settings.arguments as TopicModel));
+      case commentsRoute: return returnPage(CommentPage(post: settings.arguments as PostModel));
       case networkImageViewerRoute: return returnPage(NetworkImageViewerPage(url: settings.arguments as String));
       case localImageViewerRoute: return returnPage(LocalImageViewerPage(path: settings.arguments as String));
       default: return returnPage(const DefaultRouterPage());
@@ -29,6 +31,7 @@ class AppRouter {
   static const String topicFormRoute = '/topicForm';
   static const String postViewRoute = '/postViewRoute';
   static const String postFormRoute = '/postForm';
+  static const String commentsRoute = '/comments';
   static const String networkImageViewerRoute = '/networkImageViewer';
   static const String localImageViewerRoute = '/localImageViewer';
 
