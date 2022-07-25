@@ -31,6 +31,7 @@ class FirebaseConstants {
   static const String likedPosts = 'likedPosts';
   static const String dislikedPosts = 'dislikedPosts';
   static const String likedComments = 'likedComments';
+  static const String dislikedComments = 'dislikedComments';
   static const String likedReplies = 'likedReplies';
     //comments
   static const String commentId = 'commentId';

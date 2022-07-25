@@ -193,6 +193,45 @@ class FirebaseFirestoreService {
     await batch.commit();
   }
 
+  Future<void> likeDislikeComment({required CommentModel comment, required String optedInField, required String optedOutField}) async {
+    final List<String> securityCheck = [FirebaseConstants.dislikedComments, FirebaseConstants.likedComments];
+    if (optedInField == optedOutField) throw('Error, optedInField and optedOutField cant be the same');
+    if (!securityCheck.contains(optedInField) || !securityCheck.contains(optedOutField)) throw("Error, optedInField and optedOutField has to be likedPosts or dislikedPosts");
+
+    final userRef = firestoreInstance
+        .collection(FirebaseConstants.usersCollection)
+        .doc(getUserId);
+
+    final commentRef = firestoreInstance
+        .collection(FirebaseConstants.topicsCollection)
+        .doc(comment.parentTopicId)
+        .collection(FirebaseConstants.postsCollection)
+        .doc(comment.parentPostId)
+        .collection(FirebaseConstants.commentsCollection)
+        .doc(comment.commentId);
+
+    final batch = firestoreInstance.batch();
+
+    final userData = await userRef.get();
+
+    final String subOptedInField = optedInField == FirebaseConstants.likedComments ? FirebaseConstants.likes : FirebaseConstants.dislikes;
+    final String subOptedOutField = optedInField == FirebaseConstants.likedComments ? FirebaseConstants.dislikes : FirebaseConstants.likes;
+
+    if (List<String>.from(userData.data()![optedInField]).contains(comment.commentId)) {
+      batch.update(userRef, {optedInField: FieldValue.arrayRemove([comment.commentId])});
+      batch.update(commentRef, {subOptedInField: FieldValue.increment(-1)});
+    } else {
+      batch.update(userRef, {optedInField: FieldValue.arrayUnion([comment.commentId])});
+      batch.update(commentRef, {subOptedInField: FieldValue.increment(1)});
+    }
+
+    if (List<String>.from(userData.data()![optedOutField]).contains(comment.commentId)) {
+      batch.update(userRef, {optedOutField: FieldValue.arrayRemove([comment.commentId])});
+      batch.update(commentRef, {subOptedOutField: FieldValue.increment(-1)});
+    }
+    await batch.commit();
+  }
+
   Future<void> setComment({required String parentTopicId, required String parentPostId, required String commentContent,}) async {
 
     final comment = CommentModel(
@@ -290,14 +329,23 @@ class FirebaseFirestoreService {
       });
   }
 
-  Future<bool> getPostLikesDislikesFuture({required String postId, required String field}) {
+  Future<bool> getUserLikesDislikesFuture({required String docId, required String field}) {
     return firestoreInstance
       .collection(FirebaseConstants.usersCollection)
       .doc(getUserId)
       .get()
       .then((value) {
-        return (List<String>.from(value.data()![field])).contains(postId);
+        return (List<String>.from(value.data()![field])).contains(docId);
       });
+  }
 
+  Future<String> getUsername({required String uid}) {
+    return firestoreInstance
+      .collection(FirebaseConstants.usersCollection)
+      .doc(uid)
+      .get()
+      .then((value) {
+        return value.data()![FirebaseConstants.username];
+      });
   }
 }

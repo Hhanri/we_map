@@ -50,6 +50,7 @@ class FirebaseAuthService {
         FirebaseConstants.likedPosts: [],
         FirebaseConstants.dislikedPosts: [],
         FirebaseConstants.likedComments: [],
+        FirebaseConstants.dislikedComments: [],
         FirebaseConstants.likedReplies: []
       });
 }
