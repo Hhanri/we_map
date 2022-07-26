@@ -46,7 +46,6 @@ class FirebaseFirestoreService {
   }
 
   Future<void> setPost({required String parentTopicId, required String postTitle, required String postDescription, required List<XFile> images}) async {
-
     final PostModel post = PostModel(
       uid: getUserId,
       postId: uuid.v4(),
