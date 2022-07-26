@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:we_map/models/coment_model.dart';
 import 'package:we_map/models/post_model.dart';
+import 'package:we_map/router/router.dart';
 import 'package:we_map/services/firebase_firestore_service.dart';
 import 'package:we_map/widgets/app_bar_widget.dart';
-import 'package:we_map/widgets/comment_widget.dart';
 import 'package:we_map/widgets/comments_list_view_widget.dart';
 import 'package:we_map/widgets/loading_widget.dart';
+import 'package:we_map/widgets/text_form_field_widget.dart';
 
 class CommentPage extends StatelessWidget {
   final PostModel post;
@@ -24,16 +25,7 @@ class CommentPage extends StatelessWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      RepositoryProvider.of<FirebaseFirestoreService>(context).setComment(
-                        parentTopicId: post.parentTopicId,
-                        parentPostId: post.postId,
-                        commentContent: "this is a test"
-                      );
-                    },
-                    child: const Text('Send comment test'),
-                  ),
+                  FakeCommentTextFieldWidget(onTap: () => AppRouter.pushNamed(AppRouter.writeCommentRoute, arguments: post)),
                   CommentsListViewWidget(comments: comments)
                 ],
               ),

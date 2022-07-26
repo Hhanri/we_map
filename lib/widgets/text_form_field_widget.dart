@@ -198,3 +198,44 @@ class UsernameParameters extends TextFormParameters{
       ]
   );
 }
+
+class CommentTextFieldWidget extends StatelessWidget {
+  final TextEditingController controller;
+  final VoidCallback onSend;
+  final FocusNode node;
+  const CommentTextFieldWidget({Key? key, required this.controller, required this.onSend, required this.node}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppTheme.backgroundColor,
+      child: TextField(
+        focusNode: node,
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: AppStringsConstants.yourComment,
+          suffixIcon: IconButton(onPressed: onSend, icon: const Icon(Icons.send))
+        ),
+      ),
+    );
+  }
+}
+
+class FakeCommentTextFieldWidget extends StatelessWidget {
+  final VoidCallback onTap;
+  const FakeCommentTextFieldWidget({Key? key, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      splashFactory: NoSplash.splashFactory,
+      onTap: onTap,
+      child: const TextField(
+        enabled: false,
+        decoration: InputDecoration(
+          hintText: AppStringsConstants.yourComment,
+        ),
+      ),
+    );
+  }
+}

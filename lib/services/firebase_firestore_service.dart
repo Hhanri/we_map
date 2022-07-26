@@ -74,7 +74,23 @@ class FirebaseFirestoreService {
 
   }
 
+  Future<void> deleteComments({required PostModel post}) async {
+    await firestoreInstance
+      .collection(FirebaseConstants.topicsCollection)
+      .doc(post.parentTopicId)
+      .collection(FirebaseConstants.postsCollection)
+      .doc(post.postId)
+      .collection(FirebaseConstants.commentsCollection)
+      .get()
+      .then((comments) {
+        Future.forEach(comments.docs, (QueryDocumentSnapshot<Map<String, dynamic>> doc) async {
+          await doc.reference.delete();
+        });
+      });
+  }
+
   Future<void> deletePost({required PostModel post}) async {
+    //delete /images collection and storage
     await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
       .doc(post.parentTopicId)
@@ -87,6 +103,8 @@ class FirebaseFirestoreService {
           await deleteImageWithRef(image: ImageModel.fromJson(doc.data()));
         });
       });
+
+    await deleteComments(post: post);
 
     await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
