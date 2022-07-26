@@ -131,10 +131,10 @@ class FirebaseFirestoreService {
 
   Future<void> uploadImage({required PostModel parentPost, required XFile image}) async {
     final ImageModel imageModel = ImageModel(
-        uid: authInstance.currentUser!.uid,
-        parentTopicId: parentPost.parentTopicId,
-        parentPostId: parentPost.postId,
-        path: "${FirebaseConstants.topicsCollection}/${parentPost.uid}/${parentPost.parentTopicId}/${FirebaseConstants.postsCollection}/${parentPost.postId}/${FirebaseConstants.imagesCollection}/${image.name}"
+      uid: authInstance.currentUser!.uid,
+      parentTopicId: parentPost.parentTopicId,
+      parentPostId: parentPost.postId,
+      path: "${FirebaseConstants.topicsCollection}/${parentPost.uid}/${parentPost.parentTopicId}/${FirebaseConstants.postsCollection}/${parentPost.postId}/${FirebaseConstants.imagesCollection}/${image.name}"
     );
     final Reference ref = storageInstance.ref(imageModel.path);
     await ref.putData(await image.readAsBytes(), SettableMetadata(contentType: "image/jpeg"));
@@ -149,8 +149,8 @@ class FirebaseFirestoreService {
 
   Future<void> deleteImageWithRef({required ImageModel image}) async {
     await storageInstance
-        .ref(image.path)
-        .delete();
+      .ref(image.path)
+      .delete();
 
     await firestoreInstance
       .collection(FirebaseConstants.topicsCollection)
